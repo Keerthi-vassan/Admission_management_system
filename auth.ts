@@ -7,8 +7,14 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  session: { strategy: "jwt" },
+//   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+    maxAge: 20 * 60, // 20 minutes
+  },
+  pages:{
+    signIn: '/login',
+  },
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -25,15 +31,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const email = credentials.email as string;
         const password = credentials.password as string;
 
-        // TODO: After dinner, we'll add real database logic here
-        // For now, return a properly typed user object
+        const user = await prisma.user.findUnique({
+          where: { email  },
+        });
+
+        if(!user){
+            return null
+        }
+
+        const isPassowordValid = await bcrypt.compare(password, user.password);
+
+        if(!isPassowordValid){
+            return null
+        }
+        // return user Object (for nxt auth for handling session)
         return {
-          id: "1",
-          email: email,
-          name: "Test User",
-          role: "STUDENT",
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
         };
       },
     }),
   ],
+  callbacks: {
+    async jwt({token,user}){
+        if(user){
+            token.role = user.role
+        }
+        return token
+    },
+    async session({session,token}){
+        if(session.user){
+            session.user.role = token.role as string
+        }
+        return session
+    }
+  },
 });
