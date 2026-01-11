@@ -133,12 +133,12 @@ Replace manual Google Sheets-based admission process for college with a web-base
 **Status:** In Progress
 
 #### Deliverables
-- [ ] Next.js 14 project setup with TypeScript
-- [ ] Tailwind CSS + shadcn/ui configured
-- [ ] Supabase account connected to Prisma
-- [ ] Basic User schema (id, email, password, role)
+- [.] Next.js 14 project setup with TypeScript
+- [.] Tailwind CSS + shadcn/ui configured
+- [.] Supabase account connected to Prisma
+- [.] Basic User schema (id, email, password, role)
 - [ ] Login and signup pages (UI only)
-- [ ] GitHub repository initialized
+- [.] GitHub repository initialized
 
 #### Tasks Breakdown
 **Day 1 (1.5 hours):**
