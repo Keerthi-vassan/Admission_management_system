@@ -137,7 +137,7 @@ Replace manual Google Sheets-based admission process for college with a web-base
 - [X] Tailwind CSS + shadcn/ui configured
 - [X] Supabase account connected to Prisma
 - [X] Basic User schema (id, email, password, role)
-- [ ] Login and signup pages (UI only)
+- [X] Login and signup pages (UI only)
 - [X] GitHub repository initialized
 
 #### Tasks Breakdown
