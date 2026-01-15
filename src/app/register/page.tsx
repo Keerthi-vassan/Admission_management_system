@@ -3,16 +3,25 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {basicInfoSchema,academicInfoSchema,type BasicInfoFormData,type AcademicInfoFormData,} from "@/lib/validations/student-registration";
+import { basicInfoSchema, academicInfoSchema, type BasicInfoFormData, type AcademicInfoFormData, } from "@/lib/validations/student-registration";
 import { ProgressIndicator } from "@/components/registration/ProgressIndicator";
 import { BasicInfoForm } from "@/components/registration/BasicInfoForm";
 import { AcademicInfoForm } from "@/components/registration/AcademicInfoForm";
 import { DocumentUploadForm } from "@/components/registration/DocumentUploadForm";
+import { on } from "events";
 
 export default function RegisterPage() {
    const [currentStep, setCurrentStep] = useState(1);
    const [basicInfo, setBasicInfo] = useState<BasicInfoFormData | null>(null);
+
+   const router = useRouter();
+   const { data: session, status } = useSession();
+
+   // Redirect if not logged in
+
 
    // Form for Step 1
    const basicForm = useForm<BasicInfoFormData>({
@@ -57,13 +66,60 @@ export default function RegisterPage() {
          return;
       }
 
-      const completeData = { ...basicInfo, ...data };
-      console.log("Complete Registration Data:", completeData);
-
-      // TODO: Next session - API integration
-      alert("Form validated! API integration coming next session.");
+      // Store academic info and move to document upload
       setCurrentStep(3);
    };
+
+   const onDocumentUploadSubmit = async (documentUrls: Record<string, string>) => {
+      if (!basicInfo || !session?.user?.id) {
+         alert("Error: Missing data or not logged in");
+         return;
+      }
+
+      // Get academic form data
+      const academicData = academicForm.getValues();
+
+      // Combine all data
+      const completeData = {
+         ...basicInfo,
+         ...academicData,
+         documentUrls,
+      };
+
+      try {
+         // Call API route
+         const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify(completeData),
+         });
+
+         const result = await response.json();
+
+         if (!response.ok) {
+            throw new Error(result.error || "Registration failed");
+         }
+
+         // Success!
+         alert("Application submitted successfully!");
+         router.push("/dashboard");
+      } catch (error) {
+         console.error("Submission error:", error);
+         alert(error instanceof Error ? error.message : "Failed to submit application");
+      }
+   }
+
+   if (status === "loading") {
+      return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+   }
+
+   if (status === "unauthenticated") {
+      router.push("/login");
+      return null;
+   }
+
 
    return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
@@ -74,21 +130,23 @@ export default function RegisterPage() {
                   Step {currentStep} of 3 -{" "}
                   {currentStep === 1 ? "Basic Information"
                      : currentStep === 2 ? "Academic Information"
-                     : "Document Uploads"}
+                        : "Document Uploads"}
                </CardDescription>
             </CardHeader>
             <CardContent>
-               
+
                <ProgressIndicator currentStep={currentStep} />
 
                {currentStep === 1 && (<BasicInfoForm form={basicForm} onSubmit={onBasicInfoSubmit} />)}
 
                {currentStep === 2 && (<AcademicInfoForm form={academicForm} onSubmit={onAcademicInfoSubmit} onBack={() => setCurrentStep(1)} />)}
 
-               {currentStep === 3 && (<DocumentUploadForm onBack={() => setCurrentStep(2)} />)}
+               {currentStep === 3 && (<DocumentUploadForm onBack={() => setCurrentStep(2)} userId={session?.user?.id || ""} onSubmit={onDocumentUploadSubmit} />)}
+
 
             </CardContent>
          </Card>
       </div>
    );
+
 }
