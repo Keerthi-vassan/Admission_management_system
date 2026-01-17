@@ -9,6 +9,8 @@ import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import {Form,FormControl,FormField,FormItem,FormLabel,FormMessage,} from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
+import { Alert } from "@/components/ui/alert"
 
 // Define validation schema
 const formSchema = z.object({
@@ -47,7 +49,7 @@ export default function SignupPage() {
          const data = await response.json()
 
          if (!response.ok) {
-            setError(data.error || "Signup failed")
+            setError(data.error || "Email already in use, please use another.")
             setLoading(false)
             return
          }
@@ -75,9 +77,7 @@ export default function SignupPage() {
             </div>
 
             {error && (
-               <div className="rounded-md bg-red-50 p-4">
-                  <p className="text-sm text-red-800">{error}</p>
-               </div>
+               <Alert message={error} type="error" onClose={() => setError("")} />
             )}
 
             <Form {...form}>
@@ -107,8 +107,7 @@ export default function SignupPage() {
                         <FormItem>
                            <FormLabel>Password</FormLabel>
                            <FormControl>
-                              <Input
-                                 type="password"
+                              <PasswordInput
                                  placeholder="Enter password"
                                  {...field}
                               />
