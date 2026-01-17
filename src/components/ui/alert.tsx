@@ -42,24 +42,28 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
     }, [message, duration, onClose])
 
     return (
-      <div
-        ref={ref}
-        className={cn(
-          "rounded-md p-4",
-          type === "error" ? "bg-red-50" : "bg-green-50"
+      <>
+        {message && (
+          <div
+            ref={ref}
+            className={cn(
+              "rounded-md p-4",
+              type === "error" ? "bg-red-50" : "bg-green-50"
+            )}
+          >
+            <p className={cn("text-sm", type === "error" ? "text-red-800" : "text-green-800")}>
+              {message}
+            </p>
+            <div
+              className={cn(
+                "h-1 mt-2 rounded-full",
+                type === "error" ? "bg-red-300" : "bg-green-300"
+              )}
+              style={{ width: `${progress}%`, transition: "width 0.05s linear" }}
+            />
+          </div>
         )}
-      >
-        <p className={cn("text-sm", type === "error" ? "text-red-800" : "text-green-800")}>
-          {message}
-        </p>
-        <div
-          className={cn(
-            "h-1 mt-2 rounded-full",
-            type === "error" ? "bg-red-300" : "bg-green-300"
-          )}
-          style={{ width: `${progress}%`, transition: "width 0.05s linear" }}
-        />
-      </div>
+      </>
     )
   }
 )

@@ -21,6 +21,7 @@ const formSchema = z.object({
 
 export default function SignupPage() {
    const [error, setError] = useState("")
+   const [success, setSuccess] = useState("")
    const [loading, setLoading] = useState(false)
    const router = useRouter()
 
@@ -55,7 +56,11 @@ export default function SignupPage() {
          }
 
          // Success - redirect to login
-         router.push("/login?message=Account created! Please login.")
+         setSuccess("Account created! Please login.")
+         setTimeout(() => {
+            setSuccess("")
+            router.push("/login")
+         }, 2500)
       } catch (error) {
          console.error("Signup error:", error) // This line already exists
          console.error("Full error details:", JSON.stringify(error, null, 2)) // ADD THIS LINE
@@ -78,6 +83,10 @@ export default function SignupPage() {
 
             {error && (
                <Alert message={error} type="error" onClose={() => setError("")} />
+            )}
+
+            {success && (
+               <Alert message={success} type="success" onClose={() => setSuccess("")} />
             )}
 
             <Form {...form}>
