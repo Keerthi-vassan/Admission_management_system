@@ -17,6 +17,8 @@ import {
    FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
+import { Alert } from "@/components/ui/alert"
 
 // Validation schema (simpler - only email and password)
 const formSchema = z.object({
@@ -81,16 +83,12 @@ export default function LoginPage() {
 
             {/* Success message from signup */}
             {message && (
-               <div className="rounded-md bg-green-50 p-4">
-                  <p className="text-sm text-green-800">{message}</p>
-               </div>
+               <Alert message={message} type="success" onClose={() => {}} />
             )}
 
             {/* Error message */}
             {error && (
-               <div className="rounded-md bg-red-50 p-4">
-                  <p className="text-sm text-red-800">{error}</p>
-               </div>
+               <Alert message={error} type="error" onClose={() => setError("")} />
             )}
 
             <Form {...form}>
@@ -120,8 +118,7 @@ export default function LoginPage() {
                         <FormItem>
                            <FormLabel>Password</FormLabel>
                            <FormControl>
-                              <Input
-                                 type="password"
+                              <PasswordInput
                                  placeholder="Enter password"
                                  {...field}
                               />

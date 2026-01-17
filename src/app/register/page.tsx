@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert } from "@/components/ui/alert";
 import { basicInfoSchema, academicInfoSchema, type BasicInfoFormData, type AcademicInfoFormData, } from "@/lib/validations/student-registration";
 import { ProgressIndicator } from "@/components/registration/ProgressIndicator";
 import { BasicInfoForm } from "@/components/registration/BasicInfoForm";
@@ -16,6 +17,8 @@ import { on } from "events";
 export default function RegisterPage() {
    const [currentStep, setCurrentStep] = useState(1);
    const [basicInfo, setBasicInfo] = useState<BasicInfoFormData | null>(null);
+   const [alertMessage, setAlertMessage] = useState("");
+   const [alertType, setAlertType] = useState<"error" | "success">("error");
 
    const router = useRouter();
    const { data: session, status } = useSession();
@@ -61,7 +64,8 @@ export default function RegisterPage() {
    // Step 2 Submit Handler
    const onAcademicInfoSubmit = async (data: AcademicInfoFormData) => {
       if (!basicInfo) {
-         alert("Error: Basic info missing");
+         setAlertMessage("Error: Basic info missing");
+         setAlertType("error");
          setCurrentStep(1);
          return;
       }
@@ -72,7 +76,8 @@ export default function RegisterPage() {
 
    const onDocumentUploadSubmit = async (documentUrls: Record<string, string>) => {
       if (!basicInfo || !session?.user?.id) {
-         alert("Error: Missing data or not logged in");
+         setAlertMessage("Error: Missing data or not logged in");
+         setAlertType("error");
          return;
       }
 
@@ -103,11 +108,13 @@ export default function RegisterPage() {
          }
 
          // Success!
-         alert("Application submitted successfully!");
-         router.push("/dashboard");
+         setAlertMessage("Application submitted successfully!");
+         setAlertType("success");
+         setTimeout(() => router.push("/dashboard"), 2000);
       } catch (error) {
          console.error("Submission error:", error);
-         alert(error instanceof Error ? error.message : "Failed to submit application");
+         setAlertMessage(error instanceof Error ? error.message : "Failed to submit application");
+         setAlertType("error");
       }
    }
 
@@ -134,6 +141,13 @@ export default function RegisterPage() {
                </CardDescription>
             </CardHeader>
             <CardContent>
+               {alertMessage && (
+                  <Alert 
+                     message={alertMessage} 
+                     type={alertType} 
+                     onClose={() => setAlertMessage("")} 
+                  />
+               )}
 
                <ProgressIndicator currentStep={currentStep} />
 
