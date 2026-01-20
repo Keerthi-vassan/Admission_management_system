@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 type DocumentStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
 type ApplicationStatus = "PENDING" | "IN_REVIEW" | "DOCUMENTS_REJECTED" | "VERIFIED" | "FEE_PENDING" | "CONFIRMED" | "REJECTED";
@@ -80,6 +81,27 @@ export default function DashboardPage() {
          setLoading(false);
       }
    };
+
+   const handleDownload = async (fileUrl: string) => {
+      try {
+         // Generate a signed URL (valid for 1 hour)
+         const { data } = await supabase.storage
+            .from('student-documents')
+            .createSignedUrl(fileUrl, 10*60); // 10 minutes
+
+         if (data?.signedUrl) {
+            window.open(data.signedUrl, '_blank');
+         } else {
+            alert('Failed to generate download link');
+         }
+      } catch (error) {
+         console.error('Download error:', error);
+         alert('Failed to download file');
+      }
+    };
+
+
+
 
    if (loading) {
       return (
@@ -271,7 +293,7 @@ export default function DashboardPage() {
                               <Button
                                  size="sm"
                                  variant="outline"
-                                 onClick={() => window.open(doc.fileUrl, '_blank')}
+                                 onClick={() => handleDownload(doc.fileUrl)}
                               >
                                  Download
                               </Button>

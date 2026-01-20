@@ -71,24 +71,24 @@ export function DocumentUploadForm({ onBack, onSubmit, userId }: DocumentUploadF
    }
 
    const uploadFile = async (docType: string, file: File): Promise<string> => {
-
       const timestamp = Date.now();
       const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-      const fileName = `${userId}/${docType}/${timestamp}_${sanitizedFileName}`;
+      const fileName = `${userId}/${docType}/${timestamp}-${sanitizedFileName}`;
 
-      const { data, error } = await supabase.storage.from('student-documents').upload(fileName, file, {
-         cacheControl: '3600',
-         upsert: false,
-      })
+      const { data, error } = await supabase.storage
+         .from('student-documents')
+         .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: false,
+         });
 
       if (error) {
-         throw new Error(`Failed to upload file: ${error.message}`);
+         throw new Error(`Upload failed: ${error.message}`);
       }
 
-      const { data: urlData } = supabase.storage.from('student-documents').getPublicUrl(fileName);
-
-      return urlData.publicUrl;
-   }
+      // ✅ CHANGE THIS LINE - return path, not URL
+      return fileName; // Changed from: urlData.publicUrl
+   };
 
    const handleSubmit = async () => {
       const missingDocs = DOCUMENT_TYPES.filter(
