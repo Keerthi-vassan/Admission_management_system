@@ -2,7 +2,7 @@
 
 import { useEffect , useState } from "react"
 import { Card } from '@/components/ui/card';
-import { DocumentType } from '../../lib/constants/documents';
+import { useRouter } from "next/navigation";
 
 type Application = {
    id : string,
@@ -21,6 +21,9 @@ type Application = {
 };
 
 export default function AdminApplicationsTable(){
+
+   const router = useRouter();
+
    const [applications , setApplications ] = useState<Application[]>([]);
    const [loading ,setLoading] = useState(true);
    const [error , setError] = useState("");
@@ -90,10 +93,7 @@ export default function AdminApplicationsTable(){
                      <tr
                         key={app.id}
                         className="hover:bg-gray-50 cursor-pointer transition-colors"
-                        onClick={() => {
-                           // We'll add detail view routing in Session 2
-                           console.log("Clicked application:", app.id);
-                        }}
+                        onClick={() => router.push(`/admin/applications/${app.id}`)}
                      >
                         <td className="px-6 py-4 whitespace-nowrap">
                            <div className="text-sm font-medium text-gray-900">
