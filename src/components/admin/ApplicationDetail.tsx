@@ -4,42 +4,8 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { DocumentType } from '../../lib/constants/documents';
+import { Application } from "@/types/index";
 
-
-type Document = {
-   id: string;
-   documentType: string;
-   fileUrl: string;
-   status: string;
-   uploadedAt: string;
-};
-
-type Application = {
-   id: string;
-   name: string;
-   dateOfBirth: string;
-   contactNumber: string;
-   guardianName: string;
-   guardianNumber: string;
-   guardianEmail: string;
-   aadharNumber: string;
-   religion: string;
-   casteCategory: string;
-   branchAllotted: string;
-   permanentAddress: string;
-   state: string;
-   bloodGroup: string;
-   seatAllotmentSource: string;
-   applicationStatus: string;
-   remarksFromStudent: string | null;
-   createdAt: string;
-   user: {
-      email: string;
-      createdAt: string;
-   };
-   documents: Document[];
-};
 
 type Props = {
    applicationId: string;
