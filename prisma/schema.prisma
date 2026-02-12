@@ -68,7 +68,6 @@ enum DocumentStatus {
 // MODELS
 // ============================================
 
-
 model User {
     id        String   @id @default(cuid())
     email     String   @unique
@@ -78,86 +77,90 @@ model User {
     createdAt DateTime @default(now())
 
     // Nextauth fields for session management
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
     studentProfile StudentProfile?
+
+    verifierAssignments Assignment[] @relation("VerifierAssignments")
+    assignerAssignments Assignment[] @relation("AssignerAssignments")
 }
 
 model StudentProfile {
-  id                    String              @id @default(cuid())
-  
-  // Personal Information
-  name                  String
-  dateOfBirth           DateTime
-  contactNumber         String
-  aadharNumber          String              @unique
-  bloodGroup            String?
-  
-  // Guardian Information
-  guardianName          String
-  guardianNumber        String
-  guardianEmail         String
-  
-  // Social Category
-  religion              String
-  casteCategory         CasteCategory
-  
-  // Academic Information
-  branchAllotted        String
-  seatAllotmentSource   SeatAllotmentSource
-  
-  // Address
-  permanentAddress      String
-  state                 String
-  
-  // Application Metadata
-  remarksFromStudent    String?
-  applicationStatus     ApplicationStatus   @default(PENDING)
-  
-  // Timestamps
-  createdAt             DateTime            @default(now())
-  updatedAt             DateTime            @updatedAt
-  
-  // Relations
-  userId                String              @unique
-  user                  User                @relation(fields: [userId], references: [id], onDelete: Cascade)
-  documents             Document[]
-  
-  @@index([applicationStatus])
-  @@index([branchAllotted])
-  @@index([state])
+    id String @id @default(cuid())
+
+    // Personal Information
+    name          String
+    dateOfBirth   DateTime
+    contactNumber String
+    aadharNumber  String   @unique
+    bloodGroup    String?
+
+    // Guardian Information
+    guardianName   String
+    guardianNumber String
+    guardianEmail  String
+
+    // Social Category
+    religion      String
+    casteCategory CasteCategory
+
+    // Academic Information
+    branchAllotted      String
+    seatAllotmentSource SeatAllotmentSource
+
+    // Address
+    permanentAddress String
+    state            String
+
+    // Application Metadata
+    remarksFromStudent String?
+    applicationStatus  ApplicationStatus @default(PENDING)
+
+    // Timestamps
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    userId    String     @unique
+    user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    documents Document[]
+    assignments Assignment[]
+
+    @@index([applicationStatus])
+    @@index([branchAllotted])
+    @@index([state])
 }
 
 model Document {
-  id                  String          @id @default(cuid())
-  
-  // Document Information
-  documentType        DocumentType
-  fileUrl             String
-  fileName            String
-  fileSize            Int?
-  
-  // Status Tracking
-  status              DocumentStatus  @default(PENDING)
-  rejectionReason     String?
-  
-  // Version Tracking
-  version             Int             @default(1)
-  previousVersionId   String?
-  
-  // Timestamps
-  uploadedAt          DateTime        @default(now())
-  verifiedAt          DateTime?
-  verifiedBy          String?
-  
-  // Relations
-  studentProfileId    String
-  studentProfile      StudentProfile  @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
-  
-  @@index([studentProfileId, documentType])
-  @@unique([studentProfileId, documentType, version])
+    id String @id @default(cuid())
+
+    // Document Information
+    documentType DocumentType
+    fileUrl      String
+    fileName     String
+    fileSize     Int?
+
+    // Status Tracking
+    status          DocumentStatus @default(PENDING)
+    rejectionReason String?
+
+    // Version Tracking
+    version           Int     @default(1)
+    previousVersionId String?
+
+    // Timestamps
+    uploadedAt DateTime  @default(now())
+    verifiedAt DateTime?
+    verifiedBy String?
+
+    // Relations
+    studentProfileId String
+    studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+    @@unique([studentProfileId, documentType, version])
+    @@index([studentProfileId, documentType])
 }
 
 model Account {
@@ -194,4 +197,19 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([idnetifier, token])
+}
+
+model Assignment {
+    id            String   @id @default(cuid())
+    applicationId String   @unique
+    verifierId    String
+    assignedBy    String
+    assignedAt    DateTime @default(now())
+
+    application StudentProfile @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    verifier    User           @relation("VerifierAssignments", fields: [verifierId], references: [id])
+    assigner    User           @relation("AssignerAssignments", fields: [assignedBy], references: [id])
+
+    @@index([verifierId])
+    @@index([applicationId])
 }

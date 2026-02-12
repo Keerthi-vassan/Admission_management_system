@@ -1,12 +1,14 @@
 // Shared type definitions - single source of truth
 // All components import from here - prevents name mismatches
+export type DocumentStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
+export type ApplicationStatus = "PENDING" | "IN_REVIEW" | "DOCUMENTS_REJECTED" | "VERIFIED" | "FEE_PENDING" | "CONFIRMED" | "REJECTED";
 
 export type Document = {
   id: string;
   documentType: string;
   fileUrl: string;
   fileName: string;
-  status: string;
+  status: DocumentStatus;
   uploadedAt: string;
 };
 
@@ -26,11 +28,12 @@ export type StudentProfile = {
   state: string;
   bloodGroup: string;
   seatAllotmentSource: string;
-  applicationStatus: string;
+  applicationStatus: ApplicationStatus;
   remarksFromStudent: string | null;
   createdAt: string;
   updatedAt: string;
   userId: string;
+  documents: Document[];
 };
 
 export type Application = {
@@ -49,7 +52,7 @@ export type Application = {
   state: string;
   bloodGroup: string;
   seatAllotmentSource: string;
-  applicationStatus: string;
+  applicationStatus: ApplicationStatus;
   remarksFromStudent: string | null;
   createdAt: string;
   user: {
@@ -74,4 +77,33 @@ export type ApplicationListItem = {
     documentType: string;
     status: string;
   }>;
+};
+
+export type Verifier = {
+  id: string;
+  name: string | null;
+  email: string;
+};
+
+export type AssignedVerifier = {
+  name: string | null;
+  email: string;
+};
+
+export type ApplicationWithAssignment = {
+  id: string;
+  name: string;
+  email: string;
+  branchAllotted: string;
+  applicationStatus: string;
+  createdAt: string;
+  assignedVerifier?: AssignedVerifier | null;
+};
+
+export type Assignment = {
+  id: string;
+  applicationId: string;
+  verifierId: string;
+  assignedBy: string;
+  assignedAt: string;
 };

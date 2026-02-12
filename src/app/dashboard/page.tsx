@@ -6,40 +6,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-
-type DocumentStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
-type ApplicationStatus = "PENDING" | "IN_REVIEW" | "DOCUMENTS_REJECTED" | "VERIFIED" | "FEE_PENDING" | "CONFIRMED" | "REJECTED";
-
-interface Document {
-   id: string;
-   documentType: string;
-   fileUrl: string;
-   fileName: string;
-   status: DocumentStatus;
-   uploadedAt: string;
-}
-
-interface StudentProfile {
-   id: string;
-   name: string;
-   dateOfBirth: string;
-   contactNumber: string;
-   guardianName: string;
-   guardianNumber: string;
-   guardianEmail: string;
-   aadharNumber: string;
-   religion: string;
-   casteCategory: string;
-   branchAllotted: string;
-   seatAllotmentSource: string;
-   permanentAddress: string;
-   state: string;
-   bloodGroup: string | null;
-   remarksFromStudent: string | null;
-   applicationStatus: ApplicationStatus;
-   createdAt: string;
-   documents: Document[];
-}
+import { Document , StudentProfile , DocumentStatus , ApplicationStatus } from "@/types";
 
 export default function DashboardPage() {
    const { data: session, status } = useSession();
