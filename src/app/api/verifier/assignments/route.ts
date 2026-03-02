@@ -11,41 +11,46 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (!session.user.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    type AssignedApplicationRow = {
+      id: string;
+      name: string;
+      email: string;
+      branchAllotted: string;
+      applicationStatus: string;
+      createdAt: Date;
+      assignedAt: Date;
+    };
+
     // Fetch applications assigned to this verifier
-    const assignments = await prisma.assignment.findMany({
-      where: {
-        verifierId: session.user.id,
-      },
-      include: {
-        application: {
-          select: {
-            id: true,
-            name: true,
-            branchAllotted: true,
-            applicationStatus: true,
-            createdAt: true,
-            user: {
-              select: {
-                email: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: {
-        assignedAt: "desc",
-      },
-    });
+    const rows = await prisma.$queryRaw<AssignedApplicationRow[]>`
+      SELECT
+        sp."id" AS "id",
+        sp."name" AS "name",
+        u."email" AS "email",
+        sp."branchAllotted" AS "branchAllotted",
+        sp."applicationStatus"::text AS "applicationStatus",
+        sp."createdAt" AS "createdAt",
+        a."assignedAt" AS "assignedAt"
+      FROM "Assignment" a
+      INNER JOIN "StudentProfile" sp ON sp."id" = a."applicationId"
+      INNER JOIN "User" u ON u."id" = sp."userId"
+      WHERE a."verifierId" = ${session.user.id}
+      ORDER BY a."assignedAt" DESC
+    `;
 
     // Transform to match frontend type
-    const applications = assignments.map((assignment) => ({
-      id: assignment.application.id,
-      name: assignment.application.name,
-      email: assignment.application.user.email,
-      branchAllotted: assignment.application.branchAllotted,
-      applicationStatus: assignment.application.applicationStatus,
-      createdAt: assignment.application.createdAt.toISOString(),
-      assignedAt: assignment.assignedAt.toISOString(),
+    const applications = rows.map((row) => ({
+      id: row.id,
+      name: row.name,
+      email: row.email,
+      branchAllotted: row.branchAllotted,
+      applicationStatus: row.applicationStatus,
+      createdAt: new Date(row.createdAt).toISOString(),
+      assignedAt: new Date(row.assignedAt).toISOString(),
     }));
 
     return NextResponse.json({ applications });
