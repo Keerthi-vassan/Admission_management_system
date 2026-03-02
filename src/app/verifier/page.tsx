@@ -13,7 +13,7 @@ export default function VerifierDashboard() {
    const [applications, setApplications] = useState<ApplicationWithAssignment[]>([]);
    const [isLoading, setIsLoading] = useState(true);
 
-   // Role-based redirect
+     // Role-based redirect
    useEffect(() => {
       if (status === "loading") return;
 

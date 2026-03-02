@@ -21,6 +21,48 @@ export default function VerifierApplicationDetailPage({ params, }: { params: Pro
    const resolvedParams = use(params);
    const [application, setApplication] = useState<Application | null>(null);
    const [isLoading, setIsLoading] = useState(true);
+   const [selectedStatus, setSelectedStatus] = useState<string>("");
+   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+   const [statusError, setStatusError] = useState("");
+
+   const handleStatusUpdate = async () => {
+      if (!selectedStatus) {
+         setStatusError("please select a status");
+         return;
+      }
+
+      const confirmed = window.confirm(`Are you sure you want to mark this application as ${selectedStatus} `);
+
+      if (!confirmed) return;
+
+      setIsUpdatingStatus(true);
+      setStatusError("");
+
+      try {
+         const response = await fetch(`/api/verifier/applications/${resolvedParams.id}/status`, {
+            method: "PATCH",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify({ status: selectedStatus }),
+         });
+
+         const data = response.json();
+
+         if (response.ok) {
+            alert(`Application succesfully marked as ${selectedStatus}`),
+               window.location.reload();
+         } else {
+            setStatusError(data.error || "Failed to update status");
+         }
+      } catch (error) {
+         console.error("Error updating status : ", error);
+      } finally {
+         setIsUpdatingStatus(false);
+      }
+   };
+
+
+
+
 
    // Role-based redirect
    useEffect(() => {
@@ -223,16 +265,16 @@ export default function VerifierApplicationDetailPage({ params, }: { params: Pro
                            <div className="flex items-center gap-3">
                               <span
                                  className={`px-2 py-1 rounded-full text-xs font-medium ${doc.status === "PENDING"
-                                       ? "bg-yellow-100 text-yellow-800"
-                                       : doc.status === "APPROVED"
-                                          ? "bg-green-100 text-green-800"
-                                          : "bg-red-100 text-red-800"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : doc.status === "APPROVED"
+                                       ? "bg-green-100 text-green-800"
+                                       : "bg-red-100 text-red-800"
                                     }`}
                               >
                                  {doc.status}
                               </span>
                               <button
-                                 onClick={() => handleViewDocument(doc.fileUrl) }
+                                 onClick={() => handleViewDocument(doc.fileUrl)}
                                  className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                               >
                                  View
@@ -246,6 +288,101 @@ export default function VerifierApplicationDetailPage({ params, }: { params: Pro
 
             {/* Status Update Section - We'll add this in Session 3 */}
          </div>
+         {/* Status Update Section */}
+         <Card>
+            <CardHeader>
+               <CardTitle>Update Application Status</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+               {/* Current Status */}
+               <div className="p-3 bg-gray-50 rounded-md">
+                  <p className="text-sm text-gray-600 mb-1">Current Status:</p>
+                  <span
+                     className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${application.applicationStatus === "PENDING"
+                           ? "bg-yellow-100 text-yellow-800"
+                           : application.applicationStatus === "IN_REVIEW"
+                              ? "bg-blue-100 text-blue-800"
+                              : application.applicationStatus === "VERIFIED"
+                                 ? "bg-green-100 text-green-800"
+                                 : application.applicationStatus === "REJECTED"
+                                    ? "bg-red-100 text-red-800"
+                                    : "bg-gray-100 text-gray-800"
+                        }`}
+                  >
+                     {application.applicationStatus}
+                  </span>
+               </div>
+
+               {/* Show update controls only if not already final status */}
+               {application.applicationStatus !== "VERIFIED" &&
+                  application.applicationStatus !== "REJECTED" && (
+                     <>
+                        <div>
+                           <p className="text-sm font-medium mb-3">
+                              Change status to:
+                           </p>
+                           <div className="space-y-2">
+                              <label className="flex items-center gap-3 p-3 border rounded-md cursor-pointer hover:bg-gray-50">
+                                 <input
+                                    type="radio"
+                                    name="status"
+                                    value="VERIFIED"
+                                    checked={selectedStatus === "VERIFIED"}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    className="w-4 h-4"
+                                 />
+                                 <div>
+                                    <p className="font-medium text-green-700">Verified</p>
+                                    <p className="text-xs text-gray-600">
+                                       All documents are correct and complete
+                                    </p>
+                                 </div>
+                              </label>
+
+                              <label className="flex items-center gap-3 p-3 border rounded-md cursor-pointer hover:bg-gray-50">
+                                 <input
+                                    type="radio"
+                                    name="status"
+                                    value="REJECTED"
+                                    checked={selectedStatus === "REJECTED"}
+                                    onChange={(e) => setSelectedStatus(e.target.value)}
+                                    className="w-4 h-4"
+                                 />
+                                 <div>
+                                    <p className="font-medium text-red-700">Rejected</p>
+                                    <p className="text-xs text-gray-600">
+                                       Documents need corrections
+                                    </p>
+                                 </div>
+                              </label>
+                           </div>
+                        </div>
+
+                        {statusError && (
+                           <p className="text-sm text-red-600">{statusError}</p>
+                        )}
+
+                        <button
+                           onClick={handleStatusUpdate}
+                           disabled={!selectedStatus || isUpdatingStatus}
+                           className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+                        >
+                           {isUpdatingStatus ? "Updating..." : "Update Status"}
+                        </button>
+                     </>
+                  )}
+
+               {/* Show message if status is final */}
+               {(application.applicationStatus === "VERIFIED" ||
+                  application.applicationStatus === "REJECTED") && (
+                     <div className="p-3 bg-blue-50 rounded-md">
+                        <p className="text-sm text-blue-800">
+                           ℹ️ This application has been finalized and cannot be changed.
+                        </p>
+                     </div>
+                  )}
+            </CardContent>
+         </Card>
       </div>
    );
 }
