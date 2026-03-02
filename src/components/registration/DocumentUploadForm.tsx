@@ -119,28 +119,38 @@ export function DocumentUploadForm({ onBack, onSubmit, userId }: DocumentUploadF
    };
 
    return (
-      <div className="space-y-6">
-         <div className="space-y-4">
+      <div>
+         <h2 className="text-lg md:text-xl font-semibold text-[#2563eb] mt-8 mb-4 border-b border-gray-200 pb-2">
+            DOCUMENTS
+         </h2>
+
+         <div className="grid grid-cols-1 gap-6">
             {DOCUMENT_TYPES.map((doc) => (
-               <div key={doc.type} className="space-y-2">
-                  <Label htmlFor={doc.type}>
+               <div key={doc.type}>
+                  <Label htmlFor={doc.type} className="block mb-2">
                      {doc.label}
                      {uploadProgress[doc.type] && (
-                        <span className="ml-2 text-green-600 text-sm">✓ Uploaded</span>
+                        <span className="ml-2 text-[#16a34a] text-sm">✓ Uploaded</span>
                      )}
                   </Label>
-                  <Input
-                     id={doc.type}
-                     type="file"
-                     accept={doc.accept}
-                     onChange={(e) => handleFileSelect(doc.type, e.target.files?.[0] || null)}
-                     disabled={uploading}
-                  />
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-[#3b82f6] transition cursor-pointer">
+                     <Input
+                        id={doc.type}
+                        type="file"
+                        accept={doc.accept}
+                        onChange={(e) => handleFileSelect(doc.type, e.target.files?.[0] || null)}
+                        disabled={uploading}
+                        className="cursor-pointer"
+                     />
+                     {!selectedFiles[doc.type] && (
+                        <p className="text-sm text-[#6b7280]">Click to select {doc.label.toLowerCase()}</p>
+                     )}
+                  </div>
                   {errors[doc.type] && (
-                     <p className="text-sm text-red-600">{errors[doc.type]}</p>
+                     <p className="text-sm text-red-600 mt-2">{errors[doc.type]}</p>
                   )}
                   {selectedFiles[doc.type] && !errors[doc.type] && (
-                     <p className="text-sm text-gray-600">
+                     <p className="text-sm text-gray-600 mt-2">
                         Selected: {selectedFiles[doc.type].name} ({(selectedFiles[doc.type].size / 1024 / 1024).toFixed(2)} MB)
                      </p>
                   )}
@@ -148,24 +158,23 @@ export function DocumentUploadForm({ onBack, onSubmit, userId }: DocumentUploadF
             ))}
          </div>
 
-         <div className="flex gap-4 flex-col">
-            <Button
+         <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
+            <button
                type="button"
-               variant="outline"
                onClick={onBack}
                disabled={uploading}
-               className="w-full"
+               className="bg-[#dc2626] hover:bg-[#b91c1c] text-white font-medium px-6 py-2 rounded-md transition disabled:bg-gray-300 disabled:cursor-not-allowed order-2 sm:order-1"
             >
                Back
-            </Button>
-            <Button
+            </button>
+            <button
                type="button"
                onClick={handleSubmit}
                disabled={uploading || Object.keys(selectedFiles).length !== DOCUMENT_TYPES.length}
-               className="w-full"
+               className="bg-[#16a34a] hover:bg-[#15803d] text-white font-medium px-6 py-2 rounded-md transition shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed order-1 sm:order-2"
             >
                {uploading ? "Uploading..." : "Submit Application"}
-            </Button>
+            </button>
          </div>
       </div>
    );

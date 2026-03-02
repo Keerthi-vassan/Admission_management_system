@@ -19,94 +19,105 @@ interface BasicInfoFormProps {
 export function BasicInfoForm({ form, onSubmit }: BasicInfoFormProps) {
    return (
       <Form {...form}>
-         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-               control={form.control}
-               name="name"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Full Name</FormLabel>
-                     <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+         <form onSubmit={form.handleSubmit(onSubmit)}>
+            <h2 className="text-lg md:text-xl font-semibold text-[#2563eb] mt-8 mb-4 border-b border-gray-200 pb-2">
+               PERSONAL DETAILS
+            </h2>
 
-            <FormField
-               control={form.control}
-               name="dateOfBirth"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Date of Birth</FormLabel>
-                     <FormControl>
-                        <Input type="date" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="John Doe" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="contactNumber"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Contact Number</FormLabel>
-                     <FormControl>
-                        <Input placeholder="9876543210" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="dateOfBirth"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Date of Birth</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="guardianName"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Guardian Name</FormLabel>
-                     <FormControl>
-                        <Input placeholder="Parent/Guardian Name" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="contactNumber"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Contact Number</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="9876543210" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="guardianNumber"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Guardian Contact Number</FormLabel>
-                     <FormControl>
-                        <Input placeholder="9876543210" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="guardianName"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Guardian Name</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="Parent/Guardian Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="guardianEmail"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Guardian Email</FormLabel>
-                     <FormControl>
-                        <Input type="email" placeholder="guardian@example.com" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="guardianNumber"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Guardian Contact Number</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="9876543210" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <Button type="submit" className="w-full mt-6">
-               Next: Academic Information
-            </Button>
+               <FormField
+                  control={form.control}
+                  name="guardianEmail"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Guardian Email</FormLabel>
+                        <FormControl>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" type="email" placeholder="guardian@example.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
+               <button
+                  type="submit"
+                  className="bg-[#16a34a] hover:bg-[#15803d] text-white font-medium px-6 py-2 rounded-md transition shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+               >
+                  Next: Academic Information
+               </button>
+            </div>
          </form>
       </Form>
    );

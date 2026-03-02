@@ -24,7 +24,7 @@ export default async function ApplicationDetailPage({ params }: Props) {
    }
 
    return (
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-gray-100 px-6 md:px-8 py-8">
          <div className="max-w-7xl mx-auto">
             <ApplicationDetail applicationId={id} />
          </div>

@@ -72,11 +72,11 @@ export default function LoginPage() {
    }
 
    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-         <div className="w-full max-w-md space-y-8">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f2f4f8] px-4">
+         <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
             <div className="text-center">
-               <h1 className="text-3xl font-bold tracking-tight">Welcome Back</h1>
-               <p className="mt-2 text-sm text-gray-600">
+               <h1 className="mb-2 text-3xl font-semibold text-[#0f3d91]">Welcome Back</h1>
+               <p className="text-center text-gray-500 mb-6">
                   Sign in to your account
                </p>
             </div>
@@ -103,6 +103,7 @@ export default function LoginPage() {
                               <Input
                                  type="email"
                                  placeholder="your.email@example.com"
+                                 className="border-gray-300 focus:ring-2 focus:ring-[#0f3d91] focus:border-[#0f3d91] rounded-md transition"
                                  {...field}
                               />
                            </FormControl>
@@ -120,6 +121,7 @@ export default function LoginPage() {
                            <FormControl>
                               <PasswordInput
                                  placeholder="Enter password"
+                                 className="border-gray-300 focus:ring-2 focus:ring-[#0f3d91] focus:border-[#0f3d91] rounded-md transition"
                                  {...field}
                               />
                            </FormControl>
@@ -130,24 +132,24 @@ export default function LoginPage() {
 
                   <Button
                      type="submit"
-                     className="w-full"
+                     className="w-full bg-[#0f3d91] hover:bg-[#0c2f70] text-white font-medium rounded-md py-2 transition shadow-sm"
                      disabled={loading}
                   >
                      {loading ? "Signing in..." : "Sign In"}
                   </Button>
                </form>
             </Form>
-
-            <p className="text-center text-sm text-gray-600">
-               Don't have an account?{" "}
-               <a
-                  href="/signup"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-               >
-                  Sign up
-               </a>
-            </p>
          </div>
+
+         <p className="text-center text-sm text-gray-600 mt-6">
+            Don't have an account?{" "}
+            <a
+               href="/signup"
+               className="font-medium text-[#0f3d91] hover:underline"
+            >
+               Sign up
+            </a>
+         </p>
       </div>
    )
 }

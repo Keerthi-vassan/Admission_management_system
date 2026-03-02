@@ -10,40 +10,32 @@ export function ProgressIndicator({ currentStep }: ProgressIndicatorProps) {
    ];
 
    return (
-      <div className="mb-8">
-         <div className="relative flex items-center">
-            {steps.map((step, index) => (
-               <div key={step.number} className="flex flex-col items-center" style={{ width: '33.33%' }}>
-                  {/* Step Circle */}
-                  <div
-                     className={`z-10 w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${currentStep >= step.number
-                           ? "bg-blue-600 text-white"
-                           : "bg-gray-200 text-gray-600"
-                        }`}
-                  >
-                     {step.number}
-                  </div>
-                  {/* Step Label */}
-                  <span className="text-xs mt-2 text-gray-600">{step.label}</span>
-
-                  {/* Connecting Line (not for last step) */}
-                  {index < steps.length - 1 && (
-                     <div
-                        className="absolute top-5 h-0.5 -translate-y-1/2"
-                        style={{
-                           left: `${(index + 1) * 33.33 - 16.66}%`,
-                           right: `${(steps.length - index - 1) * 33.33 - 16.66}%`,
-                        }}
-                     >
-                        <div
-                           className={`h-full transition-colors ${currentStep >= step.number + 1 ? "bg-blue-600" : "bg-gray-300"
-                              }`}
-                        />
-                     </div>
-                  )}
+      <div className="flex items-center justify-between mt-6 mb-8 gap-4">
+         {steps.map((step, index) => (
+            <div key={step.number} className="flex items-center flex-1">
+               {/* Step Circle */}
+               <div
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
+                     currentStep > step.number
+                        ? "bg-[#16a34a] text-white border-2 border-[#16a34a]"
+                        : currentStep === step.number
+                        ? "bg-[#3b82f6] text-white border-2 border-[#3b82f6]"
+                        : "border-2 border-gray-300 text-gray-500"
+                  }`}
+               >
+                  {currentStep > step.number ? "✓" : step.number}
                </div>
-            ))}
-         </div>
+
+               {/* Connector Line (not for last step) */}
+               {index < steps.length - 1 && (
+                  <div
+                     className={`flex-1 h-1 mx-2 transition-colors ${
+                        currentStep > step.number ? "bg-[#16a34a]" : "bg-gray-300"
+                     }`}
+                  />
+               )}
+            </div>
+         ))}
       </div>
    );
  }

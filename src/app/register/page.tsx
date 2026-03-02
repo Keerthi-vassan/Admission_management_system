@@ -129,37 +129,34 @@ export default function RegisterPage() {
 
 
    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-         <Card className="w-full max-w-2xl">
-            <CardHeader>
-               <CardTitle>Student Registration</CardTitle>
-               <CardDescription>
+      <div className="min-h-screen flex flex-col justify-center bg-[#f3f4f6] py-10 px-4">
+         <div className="bg-white rounded-xl shadow-lg border border-gray-200 w-full max-w-4xl mx-auto p-6 md:p-10">
+            <div className="bg-[#2563eb] text-white rounded-t-xl -mx-6 md:-mx-10 -mt-6 md:-mt-10 mb-6 px-6 md:px-10 py-4">
+               <h1 className="text-2xl md:text-3xl font-semibold">Student Registration</h1>
+               <p className="text-sm md:text-base opacity-90">
                   Step {currentStep} of 3 -{" "}
                   {currentStep === 1 ? "Basic Information"
                      : currentStep === 2 ? "Academic Information"
                         : "Document Uploads"}
-               </CardDescription>
-            </CardHeader>
-            <CardContent>
-               {alertMessage && (
-                  <Alert 
-                     message={alertMessage} 
-                     type={alertType} 
-                     onClose={() => setAlertMessage("")} 
-                  />
-               )}
+               </p>
+            </div>
 
-               <ProgressIndicator currentStep={currentStep} />
+            {alertMessage && (
+               <Alert 
+                  message={alertMessage} 
+                  type={alertType} 
+                  onClose={() => setAlertMessage("")} 
+               />
+            )}
 
-               {currentStep === 1 && (<BasicInfoForm form={basicForm} onSubmit={onBasicInfoSubmit} />)}
+            <ProgressIndicator currentStep={currentStep} />
 
-               {currentStep === 2 && (<AcademicInfoForm form={academicForm} onSubmit={onAcademicInfoSubmit} onBack={() => setCurrentStep(1)} />)}
+            {currentStep === 1 && (<BasicInfoForm form={basicForm} onSubmit={onBasicInfoSubmit} />)}
 
-               {currentStep === 3 && (<DocumentUploadForm onBack={() => setCurrentStep(2)} userId={session?.user?.id || ""} onSubmit={onDocumentUploadSubmit} />)}
+            {currentStep === 2 && (<AcademicInfoForm form={academicForm} onSubmit={onAcademicInfoSubmit} onBack={() => setCurrentStep(1)} />)}
 
-
-            </CardContent>
-         </Card>
+            {currentStep === 3 && (<DocumentUploadForm onBack={() => setCurrentStep(2)} userId={session?.user?.id || ""} onSubmit={onDocumentUploadSubmit} />)}
+         </div>
       </div>
    );
 

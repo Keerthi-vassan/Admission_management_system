@@ -80,14 +80,33 @@ export default function DashboardPage() {
 
    if (error) {
       return (
-         <div className="min-h-screen flex items-center justify-center p-4">
-            <Card className="w-full max-w-md">
-               <CardHeader>
-                  <CardTitle>Error</CardTitle>
-                  <CardDescription>{error}</CardDescription>
+         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+            <Card className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+               <CardHeader className="p-0 text-center space-y-4">
+                  <div className="mx-auto text-blue-500" aria-hidden="true">
+                     <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-12 w-12"
+                     >
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                     </svg>
+                  </div>
+                  <CardTitle className="text-2xl font-bold text-blue-600">Application Not Found</CardTitle>
+                  <CardDescription className="mt-1 text-gray-600">{error}</CardDescription>
                </CardHeader>
-               <CardContent>
-                  <Button onClick={() => router.push("/register")} className="w-full">
+               <CardContent className="p-0 mt-6 space-y-4">
+                  <Button
+                     onClick={() => router.push("/register")}
+                     className="w-full rounded-lg bg-green-600 text-white shadow-sm transition hover:bg-green-700"
+                  >
                      Go to Registration
                   </Button>
                </CardContent>
@@ -130,173 +149,166 @@ export default function DashboardPage() {
    };
 
    return (
-      <div className="min-h-screen bg-gray-50 py-8 px-4">
-         <div className="max-w-7xl mx-auto space-y-6">
+      <div className="min-h-screen bg-[#e9edf3] py-8 px-4">
+         <div className="max-w-6xl mx-auto space-y-6">
             {/* Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-start flex-col sm:flex-row gap-4">
                <div>
-                  <h1 className="text-3xl font-bold">Student Dashboard</h1>
-                  <p className="text-gray-600">Welcome, {profile.name}</p>
+                  <h1 className="text-2xl md:text-3xl font-semibold text-[#1e3a8a]">Student Dashboard</h1>
+                  <p className="text-sm text-gray-600 mt-1">Welcome, {profile.name}</p>
                </div>
-               <Button variant="outline" onClick={() => router.push("/")}>
+               <button
+                  onClick={() => router.push("/")}
+                  className="border border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white rounded-md px-4 py-1.5 transition"
+               >
                   Sign Out
-               </Button>
+               </button>
             </div>
 
             {/* Application Status Banner */}
-            <Card>
-               <CardContent className="pt-6">
-                  <div className="flex items-center justify-between">
-                     <div>
-                        <h3 className="text-lg font-semibold">Application Status</h3>
-                        <p className="text-sm text-gray-600">
-                           Submitted on {new Date(profile.createdAt).toLocaleDateString()}
-                        </p>
-                     </div>
-                     <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(profile.applicationStatus)}`}>
-                        {profile.applicationStatus.replace(/_/g, ' ')}
-                     </span>
-                  </div>
-               </CardContent>
-            </Card>
+            <div className="bg-[#234ea5] text-white rounded-md px-6 py-4 flex justify-between items-center">
+               <div>
+                  <p className="text-sm opacity-90">Submitted on {new Date(profile.createdAt).toLocaleDateString()}</p>
+               </div>
+               <span className="bg-white/20 text-white px-4 py-1 rounded-full text-xs font-semibold">
+                  {profile.applicationStatus.replace(/_/g, ' ')}
+               </span>
+            </div>
 
             {/* Basic Information */}
-            <Card>
-               <CardHeader>
-                  <CardTitle>Basic Information</CardTitle>
-               </CardHeader>
-               <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
+               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
+                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Basic Information</h2>
+               </div>
+               <div className="px-6 py-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                      <div>
-                        <p className="text-sm text-gray-600">Full Name</p>
-                        <p className="font-semibold">{profile.name}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Full Name</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.name}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Date of Birth</p>
-                        <p className="font-semibold">{new Date(profile.dateOfBirth).toLocaleDateString()}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Date of Birth</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{new Date(profile.dateOfBirth).toLocaleDateString()}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Contact Number</p>
-                        <p className="font-semibold">{profile.contactNumber}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Contact Number</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.contactNumber}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Aadhar Number</p>
-                        <p className="font-semibold">{profile.aadharNumber}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Aadhar Number</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.aadharNumber}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Guardian Name</p>
-                        <p className="font-semibold">{profile.guardianName}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Guardian Name</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.guardianName}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Guardian Contact</p>
-                        <p className="font-semibold">{profile.guardianNumber}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Guardian Contact</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.guardianNumber}</p>
                      </div>
                   </div>
-               </CardContent>
-            </Card>
+               </div>
+            </div>
 
             {/* Academic Information */}
-            <Card>
-               <CardHeader>
-                  <CardTitle>Academic Information</CardTitle>
-               </CardHeader>
-               <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
+               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
+                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Academic Information</h2>
+               </div>
+               <div className="px-6 py-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                      <div>
-                        <p className="text-sm text-gray-600">Branch Allotted</p>
-                        <p className="font-semibold">{profile.branchAllotted}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Branch Allotted</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.branchAllotted}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Seat Allotment Source</p>
-                        <p className="font-semibold">{profile.seatAllotmentSource}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Seat Allotment Source</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.seatAllotmentSource}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Category</p>
-                        <p className="font-semibold">{profile.casteCategory}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Category</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.casteCategory}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">Religion</p>
-                        <p className="font-semibold">{profile.religion}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">Religion</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.religion}</p>
                      </div>
                      <div>
-                        <p className="text-sm text-gray-600">State</p>
-                        <p className="font-semibold">{profile.state}</p>
+                        <p className="text-xs uppercase text-gray-500 tracking-wide">State</p>
+                        <p className="text-sm font-medium text-gray-800 mt-1">{profile.state}</p>
                      </div>
                      {profile.bloodGroup && (
                         <div>
-                           <p className="text-sm text-gray-600">Blood Group</p>
-                           <p className="font-semibold">{profile.bloodGroup}</p>
+                           <p className="text-xs uppercase text-gray-500 tracking-wide">Blood Group</p>
+                           <p className="text-sm font-medium text-gray-800 mt-1">{profile.bloodGroup}</p>
                         </div>
                      )}
                   </div>
-               </CardContent>
-            </Card>
+               </div>
+            </div>
 
             {/* Documents */}
-            <Card>
-               <CardHeader>
-                  <CardTitle>Uploaded Documents</CardTitle>
-                  <CardDescription>
-                     {profile.documents.length} documents submitted
-                  </CardDescription>
-               </CardHeader>
-               <CardContent>
+            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
+               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
+                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Uploaded Documents</h2>
+                  <p className="text-xs text-gray-500 mt-1">{profile.documents.length} documents submitted</p>
+               </div>
+               <div className="px-6 py-5">
                   <div className="space-y-3">
                      {profile.documents.map((doc) => (
                         <div
                            key={doc.id}
-                           className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                           className="bg-[#f8fafc] border border-[#cbd5e1] rounded-md px-4 py-3 flex justify-between items-center hover:shadow-sm transition"
                         >
                            <div className="flex-1">
-                              <h4 className="font-semibold">{formatDocumentType(doc.documentType)}</h4>
-                              <p className="text-sm text-gray-600">
+                              <h4 className="font-medium text-sm">{formatDocumentType(doc.documentType)}</h4>
+                              <p className="text-xs text-gray-500 mt-1">
                                  Uploaded on {new Date(doc.uploadedAt).toLocaleDateString()}
                               </p>
                            </div>
-                           <div className="flex items-center gap-3">
+                           <div className="flex items-center gap-3 ml-4">
                               <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDocumentStatusColor(doc.status)}`}>
                                  {doc.status}
                               </span>
-                              <Button
-                                 size="sm"
-                                 variant="outline"
+                              <button
                                  onClick={() => handleDownload(doc.fileUrl)}
+                                 className="bg-[#1e3a8a] text-white text-xs px-3 py-1.5 rounded-md hover:bg-[#172554] transition"
                               >
                                  Download
-                              </Button>
+                              </button>
                            </div>
                         </div>
                      ))}
                   </div>
-               </CardContent>
-            </Card>
+               </div>
+            </div>
 
-            {/* Address */}
-            <Card>
-               <CardHeader>
-                  <CardTitle>Contact Information</CardTitle>
-               </CardHeader>
-               <CardContent>
+            {/* Contact Information */}
+            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
+               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
+                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Contact Information</h2>
+               </div>
+               <div className="px-6 py-5 space-y-6">
                   <div>
-                     <p className="text-sm text-gray-600">Permanent Address</p>
-                     <p className="font-semibold">{profile.permanentAddress}</p>
+                     <p className="text-xs uppercase text-gray-500 tracking-wide">Permanent Address</p>
+                     <p className="text-sm font-medium text-gray-800 mt-1">{profile.permanentAddress}</p>
                   </div>
-                  <div className="mt-4">
-                     <p className="text-sm text-gray-600">Guardian Email</p>
-                     <p className="font-semibold">{profile.guardianEmail}</p>
+                  <div>
+                     <p className="text-xs uppercase text-gray-500 tracking-wide">Guardian Email</p>
+                     <p className="text-sm font-medium text-gray-800 mt-1">{profile.guardianEmail}</p>
                   </div>
-               </CardContent>
-            </Card>
+               </div>
+            </div>
 
             {profile.remarksFromStudent && (
-               <Card>
-                  <CardHeader>
-                     <CardTitle>Your Remarks</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                     <p className="text-gray-700">{profile.remarksFromStudent}</p>
-                  </CardContent>
-               </Card>
+               <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
+                  <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
+                     <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Your Remarks</h2>
+                  </div>
+                  <div className="px-6 py-5">
+                     <p className="text-sm text-gray-700">{profile.remarksFromStudent}</p>
+                  </div>
+               </div>
             )}
          </div>
       </div>

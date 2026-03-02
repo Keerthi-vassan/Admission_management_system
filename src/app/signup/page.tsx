@@ -72,11 +72,11 @@ export default function SignupPage() {
    }
 
    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-         <div className="w-full max-w-md space-y-8">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#f2f4f8] px-4">
+         <div className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
             <div className="text-center">
-               <h1 className="text-3xl font-bold tracking-tight">Create Account</h1>
-               <p className="mt-2 text-sm text-gray-600">
+               <h1 className="mb-2 text-3xl font-semibold text-[#0f3d91]">Create Account</h1>
+               <p className="text-center text-gray-500 mb-6">
                   Sign up to get started
                </p>
             </div>
@@ -101,6 +101,7 @@ export default function SignupPage() {
                               <Input
                                  type="email"
                                  placeholder="your.email@example.com"
+                                 className="border-gray-300 focus:ring-2 focus:ring-[#0f3d91] focus:border-[#0f3d91] rounded-md transition"
                                  {...field}
                               />
                            </FormControl>
@@ -118,6 +119,7 @@ export default function SignupPage() {
                            <FormControl>
                               <PasswordInput
                                  placeholder="Enter password"
+                                 className="border-gray-300 focus:ring-2 focus:ring-[#0f3d91] focus:border-[#0f3d91] rounded-md transition"
                                  {...field}
                               />
                            </FormControl>
@@ -136,6 +138,7 @@ export default function SignupPage() {
                               <Input
                                  type="text"
                                  placeholder="Your name"
+                                 className="border-gray-300 focus:ring-2 focus:ring-[#0f3d91] focus:border-[#0f3d91] rounded-md transition"
                                  {...field}
                               />
                            </FormControl>
@@ -146,24 +149,24 @@ export default function SignupPage() {
 
                   <Button
                      type="submit"
-                     className="w-full"
+                     className="w-full bg-[#0f3d91] hover:bg-[#0c2f70] text-white font-medium rounded-md py-2 transition shadow-sm"
                      disabled={loading}
                   >
                      {loading ? "Creating account..." : "Sign Up"}
                   </Button>
                </form>
             </Form>
-
-            <p className="text-center text-sm text-gray-600">
-               Already have an account?{" "}
-               <a
-                  href="/login"
-                  className="font-medium text-blue-600 hover:text-blue-500"
-               >
-                  Sign in
-               </a>
-            </p>
          </div>
+
+         <p className="text-center text-sm text-gray-600 mt-6">
+            Already have an account?{" "}
+            <a
+               href="/login"
+               className="font-medium text-[#0f3d91] hover:underline"
+            >
+               Sign in
+            </a>
+         </p>
       </div>
    )
 }
