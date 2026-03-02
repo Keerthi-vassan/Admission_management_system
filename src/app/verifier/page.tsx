@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { ApplicationWithAssignment } from "@/types";
@@ -79,12 +79,12 @@ export default function VerifierDashboard() {
               Review and verify applications assigned to you
             </p>
           </div>
-          <Link
-            href="/"
+          <button
+            onClick={() => signOut({ callbackUrl: "/login" })}
             className="border border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white rounded-md px-4 py-1.5 transition"
           >
             Sign Out
-          </Link>
+          </button>
         </div>
 
         {isLoading ? (

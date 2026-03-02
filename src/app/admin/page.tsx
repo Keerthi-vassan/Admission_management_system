@@ -2,6 +2,7 @@ import {auth} from "@root/auth";
 import { redirect } from 'next/navigation';
 import AdminApplicationsTable from '@/components/admin/AdminApplicationsTable';
 import Link from 'next/link';
+import { LogoutButton } from '@/components/LogoutButton';
 
 export default async function AdminPage() {
    const session = await auth();
@@ -33,12 +34,7 @@ export default async function AdminPage() {
                   >
                      Assignments
                   </Link>
-                  <Link
-                     href="/"
-                     className="border border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white rounded-md px-4 py-1.5 transition"
-                  >
-                     Sign Out
-                  </Link>
+                  <LogoutButton />
                </div>
             </div>
 

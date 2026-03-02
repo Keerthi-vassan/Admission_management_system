@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { signIn, getSession } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -52,7 +52,6 @@ export default function LoginPage() {
             email: values.email,
             password: values.password,
             redirect: false,
-            callbackUrl: "/dashboard",
          })
 
          if (result?.error) {
@@ -62,10 +61,20 @@ export default function LoginPage() {
          }
 
          if (result?.ok) {
-            // Force page reload to get fresh session
-            window.location.href = "/dashboard"
+            // Fetch session to get user role
+            const session = await getSession()
+
+            // Redirect based on user role
+            if (session?.user?.role === "ADMIN") {
+               router.push("/admin")
+            } else if (session?.user?.role === "VERIFIER") {
+               router.push("/verifier")
+            } else {
+               // Default to student dashboard
+               router.push("/dashboard")
+            }
          }
-      } catch (error) {
+      } catch {
          setError("Something went wrong")
          setLoading(false)
       }
@@ -142,7 +151,7 @@ export default function LoginPage() {
          </div>
 
          <p className="text-center text-sm text-gray-600 mt-6">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
                href="/signup"
                className="font-medium text-[#0f3d91] hover:underline"
