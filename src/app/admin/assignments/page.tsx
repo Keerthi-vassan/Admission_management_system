@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Verifier, ApplicationWithAssignment } from "@/types"
 import { useRouter } from "next/navigation";
 
@@ -16,6 +16,7 @@ export default function AssignmentsPage() {
    const [isAssigning, setIsAssigning] = useState(false);
    const [filterStatus, setFilterStatus] = useState("all");
    const [filterBranch, setFilterBranch] = useState("all");
+   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
    // We'll add functions here in next steps
 
@@ -30,24 +31,47 @@ export default function AssignmentsPage() {
                fetch("/api/admin/verifiers"),
             ]);
 
+            if (!appsResponse.ok) {
+               const error = await appsResponse.json();
+               console.error("Applications fetch failed:", appsResponse.status, error);
+               
+               if (appsResponse.status === 401) {
+                  setErrorMessage("Unauthorized. Please login as an admin.");
+                  setTimeout(() => router.push('/login'), 2000);
+               } else {
+                  setErrorMessage(`Failed to fetch applications: ${error.error || 'Unknown error'}`);
+               }
+               return;
+            }
+
+            if (!verifiersResponse.ok) {
+               const error = await verifiersResponse.json();
+               console.error("Verifiers fetch failed:", verifiersResponse.status, error);
+               
+               if (verifiersResponse.status === 401) {
+                  setErrorMessage("Unauthorized. Please login as an admin.");
+                  setTimeout(() => router.push('/login'), 2000);
+               } else {
+                  setErrorMessage(`Failed to fetch verifiers: ${error.error || 'Unknown error'}`);
+               }
+               return;
+            }
+
             const appsData = await appsResponse.json();
             const verifiersData = await verifiersResponse.json();
 
-            if (appsResponse.ok && verifiersResponse.ok) {
-               setApplications(appsData.applications);
-               setVerifiers(verifiersData.verifiers);
-            } else {
-               console.error("Failed to fetch data");
-            }
+            setApplications(appsData.applications || []);
+            setVerifiers(verifiersData.verifiers || []);
          } catch (error) {
             console.error("Error fetching data:", error);
+            setErrorMessage(`Network error: ${error instanceof Error ? error.message : 'Failed to fetch data'}`);
          } finally {
             setIsLoading(false);
          }
       }
 
       fetchData();
-   }, []);
+   }, [router]);
 
    // Filter applications based on selected filters
    const filteredApplications = applications.filter((app) => {
@@ -166,33 +190,49 @@ export default function AssignmentsPage() {
    };
 
    return (
-      <div className="p-6 max-w-7xl mx-auto">
-         <div className="mb-6">
-            <h1 className="text-3xl font-bold">Verifier Assignments</h1>
-            <p className="text-gray-600 mt-2">
-               Assign applications to verifiers for review
-            </p>
-         </div>
-
-         {isLoading ? (
-            <div className="text-center py-12">
-               <p className="text-gray-600">Loading applications...</p>
+      <div className={`min-h-screen bg-gray-100 py-8 px-6 md:px-8 ${selectedApps.length > 0 ? "pb-36" : ""}`}>
+         <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-start md:items-center flex-col md:flex-row gap-4 mb-8">
+               <div>
+                  <h1 className="text-3xl font-bold text-blue-700">Verifier Assignments</h1>
+                  <p className="text-gray-600 mt-1">
+                     Assign applications to verifiers for review
+                  </p>
+               </div>
+               <button
+                  onClick={() => router.push("/admin")}
+                  className="text-blue-600 hover:underline text-sm"
+               >
+                  ← Back to Applications
+               </button>
             </div>
-         ) : (
-            <>
+
+            {errorMessage && (
+               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl shadow-sm">
+                  <p className="text-red-800 font-medium">Error</p>
+                  <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
+               </div>
+            )}
+
+            {isLoading ? (
+               <div className="text-center py-12 bg-white rounded-xl border border-gray-200 shadow-sm">
+                  <p className="text-gray-600">Loading applications...</p>
+               </div>
+            ) : (
+               <>
                {/* Filters Section */}
-               <Card className="mb-6">
-                  <CardContent className="pt-6">
-                     <div className="flex flex-wrap gap-4">
+               <Card className="mb-6 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <CardContent className="p-0">
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                         {/* Status Filter */}
-                        <div className="flex-1 min-w-[200px]">
-                           <label className="block text-sm font-medium mb-2">
+                        <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-2">
                               Status
                            </label>
                            <select
                               value={filterStatus}
                               onChange={(e) => setFilterStatus(e.target.value)}
-                              className="w-full p-2 border rounded-md"
+                              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                            >
                               <option value="all">All Applications</option>
                               <option value="unassigned">Unassigned Only</option>
@@ -201,14 +241,14 @@ export default function AssignmentsPage() {
                         </div>
 
                         {/* Branch Filter */}
-                        <div className="flex-1 min-w-[200px]">
-                           <label className="block text-sm font-medium mb-2">
+                        <div>
+                           <label className="block text-sm font-medium text-gray-700 mb-2">
                               Branch
                            </label>
                            <select
                               value={filterBranch}
                               onChange={(e) => setFilterBranch(e.target.value)}
-                              className="w-full p-2 border rounded-md"
+                              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                            >
                               <option value="all">All Branches</option>
                               {branches.map((branch) => (
@@ -220,10 +260,10 @@ export default function AssignmentsPage() {
                         </div>
 
                         {/* Stats Summary */}
-                        <div className="flex-1 min-w-[200px] flex items-end">
-                           <div className="p-3 bg-blue-50 rounded-md w-full">
-                              <p className="text-sm text-gray-600">Total Applications</p>
-                              <p className="text-2xl font-bold text-blue-600">
+                        <div className="flex items-end">
+                           <div className="w-full bg-blue-50 rounded-lg p-4 border border-blue-100">
+                              <p className="text-sm text-blue-700">Total Applications</p>
+                              <p className="text-2xl font-bold text-blue-700">
                                  {filteredApplications.length}
                               </p>
                            </div>
@@ -233,18 +273,18 @@ export default function AssignmentsPage() {
                </Card>
 
                {/* Applications Table */}
-               <Card className="p-0">
+               <Card className="p-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
                   <CardContent className="p-0">
                      <div className="overflow-x-auto">
-                        <table className="w-full">
-                           <thead className="bg-gray-50 border-b">
+                        <table className="w-full min-w-[760px]">
+                           <thead className="bg-blue-50 border-b border-gray-200 text-blue-700 uppercase text-xs tracking-wide">
                               <tr>
                                  <th className="p-4 text-left">
                                     <input
                                        type="checkbox"
                                        checked={allSelected}
                                        onChange={toggleSelectAll}
-                                       className="w-4 h-4 cursor-pointer"
+                                       className="w-4 h-4 cursor-pointer accent-blue-600"
                                     />
                                  </th>
                                  <th className="p-4 text-left font-medium">Name</th>
@@ -267,7 +307,7 @@ export default function AssignmentsPage() {
                                  filteredApplications.map((app) => (
                                     <tr
                                        key={app.id}
-                                       className={`border-b hover:bg-gray-50 ${selectedApps.includes(app.id) ? "bg-blue-50" : ""
+                                       className={`border-b border-gray-200 hover:bg-gray-50 text-sm ${selectedApps.includes(app.id) ? "bg-blue-50" : ""
                                           }`}
                                     >
                                        <td className="p-4">
@@ -275,21 +315,23 @@ export default function AssignmentsPage() {
                                              type="checkbox"
                                              checked={selectedApps.includes(app.id)}
                                              onChange={() => toggleAppSelection(app.id)}
-                                             className="w-4 h-4 cursor-pointer"
+                                             className="w-4 h-4 cursor-pointer accent-blue-600"
                                           />
                                        </td>
-                                       <td className="p-4 font-medium">{app.name}</td>
+                                       <td className="p-4 font-medium text-gray-800">{app.name}</td>
                                        <td className="p-4 text-gray-600">{app.email}</td>
-                                       <td className="p-4">{app.branchAllotted}</td>
+                                       <td className="p-4 text-gray-700">{app.branchAllotted}</td>
                                        <td className="p-4">
                                           <span
                                              className={`px-2 py-1 rounded-full text-xs font-medium ${app.applicationStatus === "PENDING"
                                                 ? "bg-yellow-100 text-yellow-800"
                                                 : app.applicationStatus === "IN_REVIEW"
-                                                   ? "bg-blue-100 text-blue-800"
+                                                   ? "bg-blue-100 text-blue-700"
                                                    : app.applicationStatus === "VERIFIED"
-                                                      ? "bg-green-100 text-green-800"
-                                                      : "bg-gray-100 text-gray-800"
+                                                      ? "bg-green-100 text-green-700"
+                                                      : app.applicationStatus === "REJECTED"
+                                                         ? "bg-red-100 text-red-700"
+                                                         : "bg-gray-100 text-gray-700"
                                                 }`}
                                           >
                                              {app.applicationStatus}
@@ -298,11 +340,11 @@ export default function AssignmentsPage() {
                                        <td className="p-4">
                                           {app.assignedVerifier ? (
                                              <div className="text-sm">
-                                                <p className="font-medium">
+                                                <p className="font-medium text-gray-800">
                                                    {app.assignedVerifier.name ||
                                                       app.assignedVerifier.email}
                                                 </p>
-                                                <p className="text-gray-500 text-xs">
+                                                <p className="text-sm text-gray-500">
                                                    {app.assignedVerifier.email}
                                                 </p>
                                              </div>
@@ -321,20 +363,20 @@ export default function AssignmentsPage() {
                   </CardContent>
                </Card>
                {/* Bulk Assignment Panel - Shows when apps selected */}
-               {selectedApps.length > 0 && (
-                  <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
-                     <div className="max-w-7xl mx-auto flex items-center gap-4">
-                        <div className="flex-1">
-                           <p className="font-medium">
+                {selectedApps.length > 0 && (
+                  <div className="fixed bottom-4 left-6 right-6 md:left-8 md:right-8 bg-white border border-gray-200 p-4 rounded-xl shadow-sm z-[70]">
+                     <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div className="w-full md:w-auto">
+                           <p className="text-sm text-gray-600">
                               {selectedApps.length} application(s) selected
                            </p>
                         </div>
 
-                        <div className="flex-1">
+                        <div className="w-full md:flex-1">
                            <select
                               value={selectedVerifier}
                               onChange={(e) => setSelectedVerifier(e.target.value)}
-                              className="w-full p-2 border rounded-md"
+                              className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                               disabled={isAssigning}
                            >
                               <option value="">-- Select Verifier --</option>
@@ -346,27 +388,30 @@ export default function AssignmentsPage() {
                            </select>
                         </div>
 
-                        <button
-                           onClick={handleBulkAssign}
-                           disabled={!selectedVerifier || isAssigning}
-                           className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
-                        >
-                           {isAssigning ? "Assigning..." : "Assign Selected"}
-                        </button>
+                        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                           <button
+                              onClick={handleBulkAssign}
+                              disabled={!selectedVerifier || isAssigning}
+                              className="rounded-lg px-5 py-2 font-medium shadow-sm bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                           >
+                              {isAssigning ? "Assigning..." : "Assign Selected"}
+                           </button>
 
-                        <button
-                           onClick={() => setSelectedApps([])}
-                           className="px-4 py-2 border rounded-md hover:bg-gray-50"
-                           disabled={isAssigning}
-                        >
-                           Clear Selection
-                        </button>
+                           <button
+                              onClick={() => setSelectedApps([])}
+                              className="rounded-lg px-5 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200"
+                              disabled={isAssigning}
+                           >
+                              Clear Selection
+                           </button>
+                        </div>
                      </div>
                   </div>
                )}
 
             </>
-         )}
+            )}
+         </div>
       </div>
    );
 }
