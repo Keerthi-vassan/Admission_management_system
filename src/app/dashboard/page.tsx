@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
@@ -24,7 +24,7 @@ export default function DashboardPage() {
       if (status === "authenticated") {
          console.log(session)
          if(session.user.role == "ADMIN") router.push("/admin");
-         else if(session.user.role == "VERIFER") router.push("/verifier");   
+         else if(session.user.role == "VERIFIER") router.push("/verifier");   
          else{fetchProfile()}
       }
    }, [status, router]);
@@ -141,7 +141,7 @@ export default function DashboardPage() {
                   <h1 className="text-3xl font-bold">Student Dashboard</h1>
                   <p className="text-gray-600">Welcome, {profile.name}</p>
                </div>
-               <Button variant="outline" onClick={() => router.push("/")}>
+               <Button variant="outline" onClick={() => signOut({redirectTo : "/"})}>
                   Sign Out
                </Button>
             </div>
