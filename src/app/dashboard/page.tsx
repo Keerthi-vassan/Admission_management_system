@@ -17,12 +17,15 @@ export default function DashboardPage() {
 
    useEffect(() => {
       if (status === "unauthenticated") {
-         router.push("/login");
+         router.push("/login") ;
          return;
       }
 
       if (status === "authenticated") {
-         fetchProfile();
+         console.log(session)
+         if(session.user.role == "ADMIN") router.push("/admin");
+         else if(session.user.role == "VERIFER") router.push("/verifier");   
+         else{fetchProfile()}
       }
    }, [status, router]);
 
