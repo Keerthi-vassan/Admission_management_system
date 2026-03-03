@@ -44,6 +44,26 @@ export async function GET(
             uploadedAt: "asc",
           },
         },
+        assignments:{
+            include:{
+                verifier:{
+                    select:{
+                        name : true,
+                        email : true,
+                    }
+                },
+                assigner:{
+                    select:{
+                        name : true,
+                        email : true,
+                    }
+                }
+            },
+            orderBy:{
+                assignedAt : "desc",
+            },
+            take:1
+        }
       },
     });
 
@@ -83,6 +103,13 @@ export async function GET(
         status: doc.status,
         uploadedAt: doc.uploadedAt.toISOString(),
       })),
+      assignment:application.assignments[0]?{
+        assignedBy :{
+            name : application.assignments[0].assigner.name,
+            email : application.assignments[0].assigner.email
+        },
+        assignedAt: application.assignments[0].assignedAt.toISOString(),
+      }:null,
     };
 
     return NextResponse.json({ application: transformedApplication });

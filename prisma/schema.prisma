@@ -83,6 +83,8 @@ model User {
     sessions       Session[]
     studentProfile StudentProfile?
 
+    remarks Remark[]
+
     verifierAssignments Assignment[] @relation("VerifierAssignments")
     assignerAssignments Assignment[] @relation("AssignerAssignments")
 }
@@ -123,10 +125,11 @@ model StudentProfile {
     updatedAt DateTime @updatedAt
 
     // Relations
-    userId    String     @unique
-    user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-    documents Document[]
+    userId      String       @unique
+    user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    documents   Document[]
     assignments Assignment[]
+    Remark      Remark[]
 
     @@index([applicationStatus])
     @@index([branchAllotted])
@@ -212,4 +215,18 @@ model Assignment {
 
     @@index([verifierId])
     @@index([applicationId])
+}
+
+model Remark {
+    id            String   @id @default(cuid())
+    applicationId String
+    authorId      String
+    text          String   @db.Text
+    createdAt     DateTime @default(now())
+
+    application StudentProfile @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+    author      User           @relation(fields: [authorId], references: [id])
+
+    @@index([applicationId])
+    @@index([authorId])
 }

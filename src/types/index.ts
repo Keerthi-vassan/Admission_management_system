@@ -1,7 +1,14 @@
 // Shared type definitions - single source of truth
 // All components import from here - prevents name mismatches
 export type DocumentStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUPERSEDED";
-export type ApplicationStatus = "PENDING" | "IN_REVIEW" | "DOCUMENTS_REJECTED" | "VERIFIED" | "FEE_PENDING" | "CONFIRMED" | "REJECTED";
+export type ApplicationStatus =
+  | "PENDING"
+  | "IN_REVIEW"
+  | "DOCUMENTS_REJECTED"
+  | "VERIFIED"
+  | "FEE_PENDING"
+  | "CONFIRMED"
+  | "REJECTED";
 
 export type Document = {
   id: string;
@@ -55,11 +62,21 @@ export type Application = {
   applicationStatus: ApplicationStatus;
   remarksFromStudent: string | null;
   createdAt: string;
+  updatedAt: string; // ADDED
   user: {
     email: string;
     createdAt: string;
   };
   documents: Document[];
+  
+  // ADDED - Assignment history
+  assignment?: {
+    assignedBy: {
+      name: string | null;
+      email: string;
+    };
+    assignedAt: string;
+  } | null;
 };
 
 // For table list view (lighter version)
@@ -106,4 +123,17 @@ export type Assignment = {
   verifierId: string;
   assignedBy: string;
   assignedAt: string;
+};
+
+export type Remark = {
+  id: string;
+  applicationId: string;
+  authorId: string;
+  text: string;
+  createdAt: string;
+  author: {
+    name: string | null;
+    email: string;
+    role: string;
+  };
 };
