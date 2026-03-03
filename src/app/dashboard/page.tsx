@@ -80,8 +80,8 @@ export default function DashboardPage() {
 
    if (error) {
       return (
-         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <Card className="w-full max-w-md rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+         <div className="min-h-screen bg-app-background flex items-center justify-center p-4">
+            <Card className="w-full max-w-md rounded-xl border border-app-border bg-app-card p-8 shadow-lg">
                <CardHeader className="p-0 text-center space-y-4">
                   <div className="mx-auto text-blue-500" aria-hidden="true">
                      <svg
@@ -99,8 +99,8 @@ export default function DashboardPage() {
                         <line x1="12" y1="8" x2="12.01" y2="8" />
                      </svg>
                   </div>
-                  <CardTitle className="text-2xl font-bold text-blue-600">Application Not Found</CardTitle>
-                  <CardDescription className="mt-1 text-gray-600">{error}</CardDescription>
+                  <CardTitle className="text-2xl font-bold text-app-primary">Application Not Found</CardTitle>
+                  <CardDescription className="mt-1 text-app-muted">{error}</CardDescription>
                </CardHeader>
                <CardContent className="p-0 mt-6 space-y-4">
                   <Button
@@ -149,24 +149,24 @@ export default function DashboardPage() {
    };
 
    return (
-      <div className="min-h-screen bg-[#e9edf3] py-8 px-4">
+      <div className="min-h-screen bg-app-background py-8 px-4">
          <div className="max-w-6xl mx-auto space-y-6">
             {/* Header */}
             <div className="flex justify-between items-start flex-col sm:flex-row gap-4">
                <div>
-                  <h1 className="text-2xl md:text-3xl font-semibold text-[#1e3a8a]">Student Dashboard</h1>
-                  <p className="text-sm text-gray-600 mt-1">Welcome, {profile.name}</p>
+                  <h1 className="text-2xl md:text-3xl font-semibold text-app-primary">Student Dashboard</h1>
+                  <p className="text-sm text-app-muted mt-1">Welcome, {profile.name}</p>
                </div>
                <button
                   onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="border border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white rounded-md px-4 py-1.5 transition"
+                  className="border border-app-primary text-app-primary hover:bg-app-primary hover:text-white rounded-md px-4 py-1.5 transition"
                >
                   Sign Out
                </button>
             </div>
 
             {/* Application Status Banner */}
-            <div className="bg-[#234ea5] text-white rounded-md px-6 py-4 flex justify-between items-center">
+            <div className="bg-app-primary text-white rounded-md px-6 py-4 flex justify-between items-center">
                <div>
                   <p className="text-sm opacity-90">Submitted on {new Date(profile.createdAt).toLocaleDateString()}</p>
                </div>
@@ -176,9 +176,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Basic Information */}
-            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
-               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
-                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Basic Information</h2>
+            <div className="bg-app-card border border-app-border rounded-md overflow-hidden">
+               <div className="bg-gray-50 px-6 py-3 border-b border-app-border">
+                  <h2 className="text-sm font-semibold text-app-primary uppercase tracking-wide">Basic Information</h2>
                </div>
                <div className="px-6 py-5">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -211,9 +211,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Academic Information */}
-            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
-               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
-                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Academic Information</h2>
+            <div className="bg-app-card border border-app-border rounded-md overflow-hidden">
+               <div className="bg-gray-50 px-6 py-3 border-b border-app-border">
+                  <h2 className="text-sm font-semibold text-app-primary uppercase tracking-wide">Academic Information</h2>
                </div>
                <div className="px-6 py-5">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -248,9 +248,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Documents */}
-            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
-               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
-                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Uploaded Documents</h2>
+            <div className="bg-app-card border border-app-border rounded-md overflow-hidden">
+               <div className="bg-gray-50 px-6 py-3 border-b border-app-border">
+                  <h2 className="text-sm font-semibold text-app-primary uppercase tracking-wide">Uploaded Documents</h2>
                   <p className="text-xs text-gray-500 mt-1">{profile.documents.length} documents submitted</p>
                </div>
                <div className="px-6 py-5">
@@ -258,7 +258,7 @@ export default function DashboardPage() {
                      {profile.documents.map((doc) => (
                         <div
                            key={doc.id}
-                           className="bg-[#f8fafc] border border-[#cbd5e1] rounded-md px-4 py-3 flex justify-between items-center hover:shadow-sm transition"
+                           className="bg-gray-50 border border-app-border rounded-md px-4 py-3 flex justify-between items-center hover:shadow-sm transition"
                         >
                            <div className="flex-1">
                               <h4 className="font-medium text-sm">{formatDocumentType(doc.documentType)}</h4>
@@ -284,9 +284,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Contact Information */}
-            <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
-               <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
-                  <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Contact Information</h2>
+            <div className="bg-app-card border border-app-border rounded-md overflow-hidden">
+               <div className="bg-gray-50 px-6 py-3 border-b border-app-border">
+                  <h2 className="text-sm font-semibold text-app-primary uppercase tracking-wide">Contact Information</h2>
                </div>
                <div className="px-6 py-5 space-y-6">
                   <div>
@@ -301,9 +301,9 @@ export default function DashboardPage() {
             </div>
 
             {profile.remarksFromStudent && (
-               <div className="bg-white border border-[#cbd5e1] rounded-md overflow-hidden">
-                  <div className="bg-[#f8fafc] px-6 py-3 border-b border-[#cbd5e1]">
-                     <h2 className="text-sm font-semibold text-[#1e3a8a] uppercase tracking-wide">Your Remarks</h2>
+               <div className="bg-app-card border border-app-border rounded-md overflow-hidden">
+                  <div className="bg-gray-50 px-6 py-3 border-b border-app-border">
+                     <h2 className="text-sm font-semibold text-app-primary uppercase tracking-wide">Your Remarks</h2>
                   </div>
                   <div className="px-6 py-5">
                      <p className="text-sm text-gray-700">{profile.remarksFromStudent}</p>

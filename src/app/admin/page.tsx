@@ -18,11 +18,11 @@ export default async function AdminPage() {
    }
 
    return(
-      <div className="min-h-screen bg-gray-100 px-6 md:px-8 py-8">
+      <div className="min-h-screen bg-app-background px-6 md:px-8 py-8">
          <div className="max-w-7xl mx-auto">
             <div className="mb-8 flex justify-between items-center flex-col sm:flex-row gap-4">
                <div>
-                  <h1 className="text-3xl font-bold text-blue-700">Admin Dashboard</h1>
+                  <h1 className="text-3xl font-bold text-app-primary">Admin Dashboard</h1>
                   <p className="text-gray-600 mt-1">
                      Manage student applications
                   </p>

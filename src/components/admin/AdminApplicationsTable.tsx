@@ -87,21 +87,21 @@ export default function AdminApplicationsTable() {
 
          {/* Stats Overview Cards */}
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-               <div className="text-3xl font-bold text-blue-700">{stats.total}</div>
-               <div className="text-xs uppercase tracking-wide text-gray-500 mt-2">Total Applications</div>
+            <div className="bg-app-card rounded-xl shadow-sm border border-app-border p-6 text-center">
+               <div className="text-3xl font-bold text-app-primary">{stats.total}</div>
+               <div className="text-xs uppercase tracking-wide text-app-muted mt-2">Total Applications</div>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-               <div className="text-3xl font-bold text-blue-700">{stats.pending}</div>
-               <div className="text-xs uppercase tracking-wide text-gray-500 mt-2">Pending</div>
+            <div className="bg-app-card rounded-xl shadow-sm border border-app-border p-6 text-center">
+               <div className="text-3xl font-bold text-app-primary">{stats.pending}</div>
+               <div className="text-xs uppercase tracking-wide text-app-muted mt-2">Pending</div>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-               <div className="text-3xl font-bold text-blue-700">{stats.verified}</div>
-               <div className="text-xs uppercase tracking-wide text-gray-500 mt-2">Verified</div>
+            <div className="bg-app-card rounded-xl shadow-sm border border-app-border p-6 text-center">
+               <div className="text-3xl font-bold text-app-primary">{stats.verified}</div>
+               <div className="text-xs uppercase tracking-wide text-app-muted mt-2">Verified</div>
             </div>
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-               <div className="text-3xl font-bold text-blue-700">{stats.inReview}</div>
-               <div className="text-xs uppercase tracking-wide text-gray-500 mt-2">In Review</div>
+            <div className="bg-app-card rounded-xl shadow-sm border border-app-border p-6 text-center">
+               <div className="text-3xl font-bold text-app-primary">{stats.inReview}</div>
+               <div className="text-xs uppercase tracking-wide text-app-muted mt-2">In Review</div>
             </div>
          </div>
 
@@ -169,27 +169,27 @@ export default function AdminApplicationsTable() {
 
 
          {/* Applications Table */}
-         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+         <div className="bg-app-card rounded-xl shadow-sm border border-app-border overflow-hidden">
             <div className="overflow-x-auto">
                <table className="w-full">
                   <thead className="bg-blue-50">
                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Student Name
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Email
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Branch
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Status
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Submitted
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-blue-700 uppercase tracking-wide">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-app-primary uppercase tracking-wide">
                            Action
                         </th>
                      </tr>
@@ -197,7 +197,7 @@ export default function AdminApplicationsTable() {
                   <tbody className="bg-white">
                      {filteredApplications.length === 0 ? (
                         <tr>
-                           <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                           <td colSpan={6} className="px-6 py-8 text-center text-app-muted">
                               {searchQuery ? "No applications match your search" : "No applications found"}
                            </td>
                         </tr>
@@ -205,7 +205,7 @@ export default function AdminApplicationsTable() {
                         filteredApplications.map((app) => (
                            <tr
                               key={app.id}
-                              className="border-b border-gray-200 hover:bg-gray-50"
+                              className="border-b border-app-border hover:bg-gray-50"
                            >
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <div className="text-sm font-medium text-gray-900">
@@ -213,7 +213,7 @@ export default function AdminApplicationsTable() {
                                  </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                 <div className="text-sm text-gray-600">
+                                 <div className="text-sm text-app-muted">
                                     {app.user.email}
                                  </div>
                               </td>
@@ -239,7 +239,7 @@ export default function AdminApplicationsTable() {
                               <td className="px-6 py-4 whitespace-nowrap">
                                  <button
                                     onClick={() => router.push(`/admin/applications/${app.id}`)}
-                                    className="bg-blue-600 text-white hover:bg-blue-700 rounded-md px-3 py-1 text-sm transition"
+                                    className="bg-app-primary text-white hover:bg-blue-900 rounded-md px-3 py-1 text-sm transition"
                                  >
                                     View
                                  </button>

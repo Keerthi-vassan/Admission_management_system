@@ -63,59 +63,59 @@ export default function VerifierDashboard() {
   // Show loading while checking auth
   if (status === "loading" || !session || session.user.role !== "VERIFIER") {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-6 md:px-8">
-        <p className="text-gray-600">Loading...</p>
+      <div className="min-h-screen bg-app-background flex items-center justify-center px-6 md:px-8">
+        <p className="text-app-muted">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-6 md:px-8">
+    <div className="min-h-screen bg-app-background py-8 px-6 md:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-start md:items-center flex-col md:flex-row gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-blue-700">My Assigned Applications</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-app-primary">My Assigned Applications</h1>
+            <p className="text-app-muted mt-1">
               Review and verify applications assigned to you
             </p>
           </div>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="border border-[#1e3a8a] text-[#1e3a8a] hover:bg-[#1e3a8a] hover:text-white rounded-md px-4 py-1.5 transition"
+            className="border border-app-primary text-app-primary hover:bg-app-primary hover:text-white rounded-md px-4 py-1.5 transition"
           >
             Sign Out
           </button>
         </div>
 
         {isLoading ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-200 shadow-sm">
-            <p className="text-gray-600">Loading assignments...</p>
+          <div className="text-center py-12 bg-app-card rounded-xl border border-app-border shadow-sm">
+            <p className="text-app-muted">Loading assignments...</p>
           </div>
         ) : (
           <>
             {/* Stats Card */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <Card className="bg-app-card rounded-xl shadow-sm border border-app-border p-6">
                 <CardContent className="p-0">
-                  <p className="text-sm text-gray-600">Total Assigned</p>
-                  <p className="text-3xl font-bold text-blue-700 mt-2">
+                  <p className="text-sm text-app-muted">Total Assigned</p>
+                  <p className="text-3xl font-bold text-app-primary mt-2">
                     {applications.length}
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <Card className="bg-app-card rounded-xl shadow-sm border border-app-border p-6">
                 <CardContent className="p-0">
-                  <p className="text-sm text-gray-600">In Review</p>
+                  <p className="text-sm text-app-muted">In Review</p>
                   <p className="text-3xl font-bold text-yellow-600 mt-2">
                     {applications.filter((a) => a.applicationStatus === "IN_REVIEW").length}
                   </p>
                 </CardContent>
               </Card>
 
-              <Card className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <Card className="bg-app-card rounded-xl shadow-sm border border-app-border p-6">
                 <CardContent className="p-0">
-                  <p className="text-sm text-gray-600">Verified</p>
+                  <p className="text-sm text-app-muted">Verified</p>
                   <p className="text-3xl font-bold text-green-600 mt-2">
                     {applications.filter((a) => a.applicationStatus === "VERIFIED").length}
                   </p>
@@ -124,13 +124,13 @@ export default function VerifierDashboard() {
             </div>
 
             {/* Applications Table */}
-            <CardTitle className="text-lg font-semibold text-blue-700 mb-4">Assigned Applications</CardTitle>
+            <CardTitle className="text-lg font-semibold text-app-primary mb-4">Assigned Applications</CardTitle>
 
-            <Card className="p-0 bg-white rounded-xl shadow-sm border border-gray-200 overflow-x-auto">
+            <Card className="p-0 bg-app-card rounded-xl shadow-sm border border-app-border overflow-x-auto">
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[760px]">
-                    <thead className="bg-blue-50 border-b border-gray-200 text-blue-700 uppercase text-xs tracking-wide">
+                    <thead className="bg-blue-50 border-b border-app-border text-app-primary uppercase text-xs tracking-wide">
                       <tr>
                         <th className="p-4 text-left font-medium">Name</th>
                         <th className="p-4 text-left font-medium">Email</th>
@@ -142,7 +142,7 @@ export default function VerifierDashboard() {
                     <tbody>
                       {applications.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="p-8 text-center text-gray-500">
+                          <td colSpan={5} className="p-8 text-center text-app-muted">
                             No applications assigned yet
                           </td>
                         </tr>
@@ -150,11 +150,11 @@ export default function VerifierDashboard() {
                         applications.map((app) => (
                           <tr
                             key={app.id}
-                            className="border-b border-gray-200 hover:bg-gray-50 text-sm cursor-pointer"
+                            className="border-b border-app-border hover:bg-gray-50 text-sm cursor-pointer"
                             onClick={() => router.push(`/verifier/applications/${app.id}`)}
                           >
                             <td className="p-4 font-medium text-gray-800">{app.name}</td>
-                            <td className="p-4 text-gray-600">{app.email}</td>
+                            <td className="p-4 text-app-muted">{app.email}</td>
                             <td className="p-4 text-gray-700">{app.branchAllotted}</td>
                             <td className="p-4">
                               <span

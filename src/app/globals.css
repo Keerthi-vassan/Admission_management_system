@@ -44,6 +44,17 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* App design tokens */
+  --color-app-background: var(--app-background);
+  --color-app-card: var(--app-card);
+  --color-app-primary: var(--app-primary);
+  --color-app-primary-light: var(--app-primary-light);
+  --color-app-border: var(--app-border);
+  --color-app-muted: var(--app-muted);
+  --color-app-success: var(--app-success);
+  --color-app-warning: var(--app-warning);
+  --color-app-danger: var(--app-danger);
 }
 
 :root {
@@ -79,6 +90,17 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* App design tokens */
+  --app-background: #f3f4f6;
+  --app-card: #ffffff;
+  --app-primary: #1d4ed8;
+  --app-primary-light: #eff6ff;
+  --app-border: #e5e7eb;
+  --app-muted: #6b7280;
+  --app-success: #16a34a;
+  --app-warning: #ca8a04;
+  --app-danger: #dc2626;
 }
 
 .dark {
@@ -121,5 +143,28 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  /* Optional utility classes for future component use */
+  .page-container {
+    @apply min-h-screen bg-app-background py-8 px-6 md:px-8;
+  }
+
+  .card-base {
+    @apply bg-app-card rounded-xl shadow-sm border border-app-border;
+  }
+
+  .card-header-base {
+    @apply bg-gray-50 px-6 py-3 border-b border-app-border;
+  }
+
+  .section-title {
+    @apply text-sm font-semibold text-app-primary uppercase tracking-wide;
+  }
+
+  .muted-text {
+    @apply text-sm text-app-muted;
   }
 }
