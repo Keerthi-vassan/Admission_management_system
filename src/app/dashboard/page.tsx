@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-import { Document , StudentProfile , DocumentStatus , ApplicationStatus } from "@/types";
+import { Document, StudentProfile, DocumentStatus, ApplicationStatus, Remark } from "@/types";
 
 export default function DashboardPage() {
    const { data: session, status } = useSession();
@@ -14,6 +14,25 @@ export default function DashboardPage() {
    const [profile, setProfile] = useState<StudentProfile | null>(null);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState<string | null>(null);
+   const [remarks, setRemarks] = useState<Remark[]>([]);
+
+   // Fetch remarks
+   useEffect(() => {
+      async function fetchRemarks() {
+         try {
+            const response = await fetch("/api/student/remarks");
+            const data = await response.json();
+
+            if (response.ok) {
+               setRemarks(data.remarks);
+            }
+         } catch (error) {
+            console.error("Error fetching remarks:", error);
+         }
+      }
+
+      fetchRemarks();
+   }, []);
 
    useEffect(() => {
       if (status === "unauthenticated") {
@@ -22,7 +41,10 @@ export default function DashboardPage() {
       }
 
       if (status === "authenticated") {
-         fetchProfile();
+         console.log(session)
+         if (session.user.role == "ADMIN") router.push("/admin");
+         else if (session.user.role == "VERIFIER") router.push("/verifier");
+         else { fetchProfile() }
       }
    }, [status, router]);
 
@@ -54,7 +76,7 @@ export default function DashboardPage() {
          // Generate a signed URL (valid for 1 hour)
          const { data } = await supabase.storage
             .from('student-documents')
-            .createSignedUrl(fileUrl, 10*60); // 10 minutes
+            .createSignedUrl(fileUrl, 10 * 60); // 10 minutes
 
          if (data?.signedUrl) {
             window.open(data.signedUrl, '_blank');
@@ -65,7 +87,7 @@ export default function DashboardPage() {
          console.error('Download error:', error);
          alert('Failed to download file');
       }
-    };
+   };
 
 
 
@@ -307,6 +329,37 @@ export default function DashboardPage() {
                   </div>
                   <div className="px-6 py-5">
                      <p className="text-sm text-gray-700">{profile.remarksFromStudent}</p>
+                  </div>
+               </div>
+            )}
+            {/* Verifier Remarks Section */}
+            {remarks.length > 0 && (
+               <div className="mt-6 pt-6 border-t">
+                  <h3 className="text-lg font-semibold mb-3">Verifier Remarks</h3>
+                  <div className="space-y-3">
+                     {remarks.map((remark) => (
+                        <div
+                           key={remark.id}
+                           className="p-3 bg-blue-50 rounded-md border-l-4 border-blue-500"
+                        >
+                           <p className="text-sm text-gray-800 mb-2">{remark.text}</p>
+                           <div className="flex items-center justify-between text-xs text-gray-600">
+                              <span className="font-medium">
+                                 {remark.author.role === "VERIFIER" && "Verifier: "}
+                                 {remark.author.name || remark.author.email}
+                              </span>
+                              <span>
+                                 {new Date(remark.createdAt).toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "short",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                 })}
+                              </span>
+                           </div>
+                        </div>
+                     ))}
                   </div>
                </div>
             )}
