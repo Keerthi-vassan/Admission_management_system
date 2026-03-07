@@ -66,33 +66,40 @@ export default function ApplicationDetail({ applicationId }: Props) {
 
    return (
       <div className="space-y-6">
-         {/* Header with back button */}
-         <div className="flex items-center justify-between">
+         {/* Back Button */}
+         <button
+            onClick={() => router.push("/admin")}
+            className="text-blue-600 hover:underline text-sm mb-6"
+         >
+            ← Back to Applications
+         </button>
+
+         {/* Top Status Banner */}
+         <div className="bg-blue-700 text-white rounded-xl p-6 flex justify-between items-center shadow-sm">
             <div>
-               <Button
-                  onClick={() => router.push("/admin")}
-                  variant="outline"
-                  className="mb-4"
-               >
-                  ← Back to Applications
-               </Button>
-               <h1 className="text-3xl font-bold">{application.name}</h1>
-               <p className="text-gray-600 mt-1">{application.user.email}</p>
+               <h1 className="text-xl font-semibold">{application.name}</h1>
+               <p className="text-sm text-blue-100 mt-1">
+                  Applied on {new Date(application.createdAt).toLocaleDateString('en-GB')}
+               </p>
             </div>
-            <span className={`px-4 py-2 text-sm font-semibold rounded-full 
-          ${application.applicationStatus === "PENDING" ? "bg-yellow-100 text-yellow-800" : ""}
-          ${application.applicationStatus === "IN_REVIEW" ? "bg-blue-100 text-blue-800" : ""}
-          ${application.applicationStatus === "VERIFIED" ? "bg-green-100 text-green-800" : ""}
-          ${application.applicationStatus === "REJECTED" ? "bg-red-100 text-red-800" : ""}
-        `}>
-               {application.applicationStatus}
+            <span className={`px-4 py-2 text-xs font-semibold rounded-full 
+               ${application.applicationStatus === "PENDING" ? "bg-yellow-100 text-yellow-800" : ""}
+               ${application.applicationStatus === "IN_REVIEW" ? "bg-blue-100 text-blue-700" : ""}
+               ${application.applicationStatus === "DOCUMENTS_REJECTED" ? "bg-red-100 text-red-700" : ""}
+               ${application.applicationStatus === "VERIFIED" ? "bg-green-100 text-green-700" : ""}
+               ${application.applicationStatus === "FEE_PENDING" ? "bg-orange-100 text-orange-700" : ""}
+               ${application.applicationStatus === "CONFIRMED" ? "bg-green-200 text-green-800" : ""}
+               ${application.applicationStatus === "REJECTED" ? "bg-red-200 text-red-800" : ""}
+            `}>
+               {application.applicationStatus.replace(/_/g, ' ')}
             </span>
          </div>
 
          {/* Personal Information */}
-         <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Personal Information</h2>
-            <div className="grid grid-cols-2 gap-4">
+         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-blue-700 border-b border-gray-200 pb-2 mb-4">Personal Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <InfoRow label="Email" value={application.user.email} />
                <InfoRow label="Date of Birth" value={new Date(application.dateOfBirth).toLocaleDateString('en-GB')} />
                <InfoRow label="Contact Number" value={application.contactNumber} />
                <InfoRow label="Blood Group" value={application.bloodGroup} />
@@ -104,30 +111,30 @@ export default function ApplicationDetail({ applicationId }: Props) {
             <div className="mt-4">
                <InfoRow label="Permanent Address" value={application.permanentAddress} />
             </div>
-         </Card>
+         </div>
 
          {/* Guardian Information */}
-         <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Guardian Information</h2>
-            <div className="grid grid-cols-2 gap-4">
+         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-blue-700 border-b border-gray-200 pb-2 mb-4">Guardian Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <InfoRow label="Guardian Name" value={application.guardianName} />
                <InfoRow label="Guardian Number" value={application.guardianNumber} />
                <InfoRow label="Guardian Email" value={application.guardianEmail} />
             </div>
-         </Card>
+         </div>
 
          {/* Academic Information */}
-         <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Academic Information</h2>
-            <div className="grid grid-cols-2 gap-4">
+         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-blue-700 border-b border-gray-200 pb-2 mb-4">Academic Information</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <InfoRow label="Branch Allotted" value={application.branchAllotted} />
                <InfoRow label="Seat Allotment Source" value={application.seatAllotmentSource} />
             </div>
-         </Card>
+         </div>
 
          {/* Documents */}
-         <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Uploaded Documents</h2>
+         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 className="text-lg font-semibold text-blue-700 border-b border-gray-200 pb-2 mb-4">Uploaded Documents</h2>
             <div className="space-y-3">
                {application.documents.length === 0 ? (
                   <p className="text-gray-500">No documents uploaded yet.</p>
@@ -135,50 +142,42 @@ export default function ApplicationDetail({ applicationId }: Props) {
                   application.documents.map((doc) => (
                      <div
                         key={doc.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        className="flex justify-between items-center border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
                      >
                         <div className="flex-1">
-                           <p className="font-medium">{formatDocumentType(doc.documentType)}</p>
-                           <p className="text-sm text-gray-500">
+                           <p className="font-medium text-sm">{formatDocumentType(doc.documentType)}</p>
+                           <p className="text-xs text-gray-500 mt-1">
                               Uploaded: {new Date(doc.uploadedAt).toLocaleDateString('en-GB')}
                            </p>
                         </div>
-                        <div className="flex items-center gap-3">
-                           <span className={`px-2 py-1 text-xs font-semibold rounded
-                    ${doc.status === "PENDING" ? "bg-yellow-100 text-yellow-800" : ""}
-                    ${doc.status === "APPROVED" ? "bg-green-100 text-green-800" : ""}
-                    ${doc.status === "REJECTED" ? "bg-red-100 text-red-800" : ""}
-                  `}>
+                        <div className="flex items-center gap-3 ml-4">
+                           <span className={`px-3 py-1 text-xs font-semibold rounded-full
+                              ${doc.status === "PENDING" ? "bg-yellow-100 text-yellow-800" : ""}
+                              ${doc.status === "APPROVED" ? "bg-green-100 text-green-800" : ""}
+                              ${doc.status === "REJECTED" ? "bg-red-100 text-red-800" : ""}
+                           `}>
                               {doc.status}
                            </span>
-                           <Button
-                              size="sm"
+                           <button
                               onClick={()=> handleViewDocument(doc.fileUrl)}
+                              className="bg-blue-600 text-white hover:bg-blue-700 rounded-md px-3 py-1 text-sm transition"
                            >
-                              View
-                           </Button>
+                              Download
+                           </button>
                         </div>
                      </div>
                   ))
                )}
             </div>
-         </Card>
+         </div>
 
          {/* Remarks */}
          {application.remarksFromStudent && (
-            <Card className="p-6">
-               <h2 className="text-xl font-semibold mb-4">Student Remarks</h2>
-               <p className="text-gray-700 whitespace-pre-wrap">{application.remarksFromStudent}</p>
-            </Card>
-         )}
-
-         {/* Submission Info */}
-         <Card className="p-6 bg-gray-50">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-               <InfoRow label="Application Submitted" value={new Date(application.createdAt).toLocaleString('en-GB')} />
-               <InfoRow label="Account Created" value={new Date(application.user.createdAt).toLocaleString('en-GB')} />
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+               <h2 className="text-lg font-semibold text-blue-700 border-b border-gray-200 pb-2 mb-4">Student Remarks</h2>
+               <p className="text-sm text-gray-700 whitespace-pre-wrap">{application.remarksFromStudent}</p>
             </div>
-         </Card>
+         )}
       </div>
    );
 }
@@ -187,8 +186,8 @@ export default function ApplicationDetail({ applicationId }: Props) {
 function InfoRow({ label, value }: { label: string; value: string }) {
    return (
       <div>
-         <p className="text-sm text-gray-600 font-medium">{label}</p>
-         <p className="text-gray-900">{value || "Not provided"}</p>
+         <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
+         <p className="font-medium text-gray-800 mt-1">{value || "Not provided"}</p>
       </div>
    );
 }

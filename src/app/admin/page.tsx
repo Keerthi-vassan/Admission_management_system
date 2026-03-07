@@ -1,48 +1,56 @@
-"use client"
+"use client";
 
-import { redirect } from 'next/navigation';
-import AdminApplicationsTable from '@/components/admin/AdminApplicationsTable';
-import { useSession, signOut } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import AdminApplicationsTable from "@/components/admin/AdminApplicationsTable";
+import Link from "next/link";
+import { LogoutButton } from "@/components/LogoutButton";
 
 export default function AdminPage() {
-   const session = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
+  if (status === "loading") {
+    return null;
+  }
 
+  if (!session) {
+    router.push("/login");
+    return null;
+  }
 
+  if (session.user.role !== "ADMIN") {
+    router.push("/dashboard");
+    return null;
+  }
 
-   if (!session) {
-      redirect('/login');
-   }
-   if (session?.data?.user.role !== "ADMIN") {
-      redirect('/dashboard');
-   }
+  return (
+    <div className="min-h-screen bg-app-background px-6 md:px-8 py-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8 flex justify-between items-center flex-col sm:flex-row gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-app-primary">
+              Admin Dashboard
+            </h1>
+            <p className="text-app-muted mt-1">
+              Manage student applications
+            </p>
+          </div>
 
-   return (
-      <div className="min-h-screen bg-gray-50 p-8">
-         <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between">
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            <Link
+              href="/admin/assignments"
+              className="border border-blue-500 text-blue-600 hover:bg-blue-50 rounded-lg px-4 py-2 text-sm font-medium transition"
+            >
+              Assignments
+            </Link>
 
-               <div className="mb-8">
-                  <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-                  <p className="text-gray-600 mt-2">
-                     Manage student applications
-                  </p>
-               </div>
-               <Button variant={'outline'} onClick={() => signOut({redirectTo : "/"})}>
-                  Sign Out 
-               </Button>
+            <LogoutButton />
+          </div>
+        </div>
 
-            </div>
-
-
-
-            <AdminApplicationsTable />
-         </div>
+        <AdminApplicationsTable />
       </div>
-
-   );
-
-
-
+    </div>
+  );
 }

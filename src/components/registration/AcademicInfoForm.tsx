@@ -73,181 +73,196 @@ const INDIAN_STATES = [
 export function AcademicInfoForm({ form, onSubmit, onBack }: AcademicInfoFormProps) {
    return (
       <Form {...form}>
-         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-               control={form.control}
-               name="aadharNumber"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Aadhar Number</FormLabel>
-                     <FormControl>
-                        <Input placeholder="123456789012" maxLength={12} {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+         <form onSubmit={form.handleSubmit(onSubmit)}>
+            <h2 className="text-lg md:text-xl font-semibold text-[#2563eb] mt-8 mb-4 border-b border-gray-200 pb-2">
+               ACADEMIC DETAILS
+            </h2>
 
-            <FormField
-               control={form.control}
-               name="religion"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Religion</FormLabel>
-                     <FormControl>
-                        <Input placeholder="Hindu, Muslim, Christian, etc." {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="casteCategory"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Caste Category</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <FormField
+                  control={form.control}
+                  name="aadharNumber"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Aadhar Number</FormLabel>
                         <FormControl>
-                           <SelectTrigger>
-                              <SelectValue placeholder="Select category" />
-                           </SelectTrigger>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="123456789012" maxLength={12} {...field} />
                         </FormControl>
-                        <SelectContent>
-                           <SelectItem value="GENERAL">General</SelectItem>
-                           <SelectItem value="GENERAL_EWS">General-EWS</SelectItem>
-                           <SelectItem value="OBC_NCL">OBC-NCL</SelectItem>
-                           <SelectItem value="SC">SC</SelectItem>
-                           <SelectItem value="ST">ST</SelectItem>
-                        </SelectContent>
-                     </Select>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="branchAllotted"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Branch Allotted</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+               <FormField
+                  control={form.control}
+                  name="religion"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Religion</FormLabel>
                         <FormControl>
-                           <SelectTrigger>
-                              <SelectValue placeholder="Select branch" />
-                           </SelectTrigger>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="Hindu, Muslim, Christian, etc." {...field} />
                         </FormControl>
-                        <SelectContent>
-                           {BRANCHES.map((branch) => (
-                              <SelectItem key={branch.value} value={branch.value}>
-                                 {branch.label}
-                              </SelectItem>
-                           ))}
-                        </SelectContent>
-                     </Select>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="seatAllotmentSource"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Seat Allotment Source</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+               <FormField
+                  control={form.control}
+                  name="casteCategory"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Caste Category</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <FormControl>
+                              <SelectTrigger className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition">
+                                 <SelectValue placeholder="Select category" />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              <SelectItem value="GENERAL">General</SelectItem>
+                              <SelectItem value="GENERAL_EWS">General-EWS</SelectItem>
+                              <SelectItem value="OBC_NCL">OBC-NCL</SelectItem>
+                              <SelectItem value="SC">SC</SelectItem>
+                              <SelectItem value="ST">ST</SelectItem>
+                           </SelectContent>
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="branchAllotted"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Branch Allotted</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <FormControl>
+                              <SelectTrigger className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition">
+                                 <SelectValue placeholder="Select branch" />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              {BRANCHES.map((branch) => (
+                                 <SelectItem key={branch.value} value={branch.value}>
+                                    {branch.label}
+                                 </SelectItem>
+                              ))}
+                           </SelectContent>
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="seatAllotmentSource"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Seat Allotment Source</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <FormControl>
+                              <SelectTrigger className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition">
+                                 <SelectValue placeholder="Select source" />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              <SelectItem value="JOSSA">JOSSA</SelectItem>
+                              <SelectItem value="CSAB">CSAB</SelectItem>
+                           </SelectContent>
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+
+               <FormField
+                  control={form.control}
+                  name="bloodGroup"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Blood Group (Optional)</FormLabel>
                         <FormControl>
-                           <SelectTrigger>
-                              <SelectValue placeholder="Select source" />
-                           </SelectTrigger>
+                           <Input className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition" placeholder="A+, B-, O+, etc." {...field} />
                         </FormControl>
-                        <SelectContent>
-                           <SelectItem value="JOSSA">JOSSA</SelectItem>
-                           <SelectItem value="CSAB">CSAB</SelectItem>
-                        </SelectContent>
-                     </Select>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
 
-            <FormField
-               control={form.control}
-               name="permanentAddress"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Permanent Address</FormLabel>
-                     <FormControl>
-                        <Textarea placeholder="Full postal address" {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
-
-            <FormField
-               control={form.control}
-               name="state"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>State</FormLabel>
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <div className="grid grid-cols-1 gap-6 mt-6">
+               <FormField
+                  control={form.control}
+                  name="permanentAddress"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Permanent Address</FormLabel>
                         <FormControl>
-                           <SelectTrigger>
-                              <SelectValue placeholder="Select state" />
-                           </SelectTrigger>
+                           <Textarea className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition resize-none min-h-[100px]" placeholder="Full postal address" {...field} />
                         </FormControl>
-                        <SelectContent>
-                           {INDIAN_STATES.map((state) => (
-                              <SelectItem key={state} value={state}>
-                                 {state}
-                              </SelectItem>
-                           ))}
-                        </SelectContent>
-                     </Select>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="bloodGroup"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Blood Group (Optional)</FormLabel>
-                     <FormControl>
-                        <Input placeholder="A+, B-, O+, etc." {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="state"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>State</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                           <FormControl>
+                              <SelectTrigger className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition">
+                                 <SelectValue placeholder="Select state" />
+                              </SelectTrigger>
+                           </FormControl>
+                           <SelectContent>
+                              {INDIAN_STATES.map((state) => (
+                                 <SelectItem key={state} value={state}>
+                                    {state}
+                                 </SelectItem>
+                              ))}
+                           </SelectContent>
+                        </Select>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
 
-            <FormField
-               control={form.control}
-               name="remarksFromStudent"
-               render={({ field }) => (
-                  <FormItem>
-                     <FormLabel>Remarks (Optional)</FormLabel>
-                     <FormControl>
-                        <Textarea placeholder="Any additional comments..." {...field} />
-                     </FormControl>
-                     <FormMessage />
-                  </FormItem>
-               )}
-            />
+               <FormField
+                  control={form.control}
+                  name="remarksFromStudent"
+                  render={({ field }) => (
+                     <FormItem>
+                        <FormLabel>Remarks (Optional)</FormLabel>
+                        <FormControl>
+                           <Textarea className="border-gray-300 focus:ring-2 focus:ring-[#3b82f6] focus:border-[#3b82f6] rounded-md transition resize-none min-h-[100px]" placeholder="Any additional comments..." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                     </FormItem>
+                  )}
+               />
+            </div>
 
-            <div className="flex gap-4 flex-col">
-               <Button type="button" variant="outline" onClick={onBack} className="w-full">
+            <div className="flex flex-col sm:flex-row justify-between gap-4 mt-8">
+               <button
+                  type="button"
+                  onClick={onBack}
+                  className="bg-[#dc2626] hover:bg-[#b91c1c] text-white font-medium px-6 py-2 rounded-md transition order-2 sm:order-1"
+               >
                   Back
-               </Button>
-               <Button type="submit" className="w-full">
+               </button>
+               <button
+                  type="submit"
+                  className="bg-[#16a34a] hover:bg-[#15803d] text-white font-medium px-6 py-2 rounded-md transition shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed order-1 sm:order-2"
+               >
                   Next: Upload Documents
-               </Button>
+               </button>
             </div>
          </form>
       </Form>
