@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function InstituteHeader() {
   return (
-    <header className="bg-white border-b border-gray-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex flex-col md:flex-row items-center justify-center relative gap-2 md:gap-0">
           <div className="md:absolute md:left-0 flex justify-center w-full md:w-auto">
