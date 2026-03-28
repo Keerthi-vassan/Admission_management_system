@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
+import { InstituteHeader } from "@/components/ui/InstituteHeader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -27,6 +28,7 @@ export default function RootLayout({
       <html lang="en">
          <body>
             <SessionProvider>
+               <InstituteHeader />
                {children}
             </SessionProvider>
          </body>
